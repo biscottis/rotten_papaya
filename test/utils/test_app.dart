@@ -5,14 +5,17 @@ import 'package:flutter_i18n/loaders/file_translation_loader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/route_manager.dart';
-import 'package:rotten_papaya/app/pages/movie_listing_page.dart';
 import 'package:rotten_papaya/app/theme.dart';
 
-class RottenPapayaApp extends StatelessWidget {
+class TestApp extends StatelessWidget {
+  final Widget home;
+
+  const TestApp({Key key, @required this.home}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Rotten Papaya',
+      title: 'Test Papaya',
       theme: appTheme,
       localizationsDelegates: [
         FlutterI18nDelegate(
@@ -27,13 +30,7 @@ class RottenPapayaApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      initialRoute: '/',
-      getPages: [
-        GetPage(
-          name: '/',
-          page: () => MovieListingPage(),
-        ),
-      ],
+      home: home,
     );
   }
 }

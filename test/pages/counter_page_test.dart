@@ -7,12 +7,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotten_papaya/app/rotten_papaya_app.dart';
+import 'package:rotten_papaya/app/pages/counter_page.dart';
+
+import '../utils/test_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(RottenPapayaApp());
+    await tester.pumpWidget(
+        TestApp(home: CounterPage(title: 'Flutter Demo Home Page')));
     await tester.pumpAndSettle();
 
     // Verify that our counter starts at 0.
