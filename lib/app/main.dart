@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:rotten_papaya/app/config/env_config.dart';
@@ -35,10 +36,9 @@ void _registerDependencies() {
       logConfig: ConfigLogger.recommended(),
     ),
   );
-
   sl.registerLazySingleton<EasyTMDB>(() => EasyTMDB(EnvConfig.tmdbApiKeyV3));
-
   sl.registerLazySingleton<TmdbRepository>(() => TmdbRepository());
+  sl.registerLazySingleton<BaseCacheManager>(() => DefaultCacheManager());
 }
 
 void _handleUncaughtError(Object error, StackTrace stack) {

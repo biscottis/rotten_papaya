@@ -8,7 +8,7 @@ extension TextStyleExtension on TextStyle {
   /// doesn't work
   /// See: [https://github.com/material-foundation/google-fonts-flutter/issues/35]
   TextStyle applyGoogleFontWeight(FontWeight overrideFontWeight) {
-    if (overrideFontWeight == null || this.fontWeight == fontWeight) {
+    if (overrideFontWeight == null || this.fontWeight == overrideFontWeight) {
       return this;
     }
 

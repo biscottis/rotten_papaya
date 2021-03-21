@@ -7,9 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotten_papaya/app/pages/counter_page.dart';
+import 'package:rotten_papaya/app/pages/counter_page/counter_page.dart';
 
-import '../utils/test_app.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
