@@ -5,7 +5,8 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
-import 'package:tmdb_easy/model/search/search_movie.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_response.dart';
 
 part 'movie_listing_store.g.dart';
 
@@ -15,14 +16,14 @@ abstract class _MovieListingStoreBase with Store {
   final TmdbRepository _tmdbRepo;
 
   @observable
-  ObservableFuture<SearchMovie> _searchMovieFuture;
+  ObservableFuture<SearchMovieResponse> _searchMovieFuture;
 
   @computed
   bool get isInitialLoad =>
       (_searchMovieFuture.status == FutureStatus.pending && _isFirstLoad);
 
   @observable
-  ObservableList<SearchMovieResults> results;
+  ObservableList<SearchMovieInfo> results;
 
   @observable
   int page;
@@ -43,8 +44,8 @@ abstract class _MovieListingStoreBase with Store {
 
   _MovieListingStoreBase()
       : _tmdbRepo = sl.get<TmdbRepository>(),
-        _searchMovieFuture = Future.value(SearchMovie()).asObservable(),
-        results = <SearchMovieResults>[].asObservable(),
+        _searchMovieFuture = Future.value(SearchMovieResponse()).asObservable(),
+        results = <SearchMovieInfo>[].asObservable(),
         page = 0,
         totalResults = 0,
         totalPages = 0,
@@ -81,10 +82,10 @@ abstract class _MovieListingStoreBase with Store {
 
     try {
       _searchMovieFuture = Future.delayed(Duration(seconds: 1),
-              () => _tmdbRepo.searchMovie2(_currentQuery, page: pageToQuery))
+              () => _tmdbRepo.searchMovie(_currentQuery, page: pageToQuery))
           .asObservable();
       // _searchMovieFuture = _tmdbRepo
-      //     .searchMovie2(_currentQuery, page: pageToQuery)
+      //     .searchMovie(_currentQuery, page: pageToQuery)
       //     .asObservable();
       final resp = await _searchMovieFuture;
 

@@ -1,4 +1,5 @@
 import 'package:rotten_papaya/app/utils/service_locator.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_response.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:tmdb_easy/easyTMDB.dart';
 
@@ -10,7 +11,7 @@ class TmdbRepository {
       : _tmdb = sl.get<TMDB>(),
         _easyTmdb = sl.get<EasyTMDB>();
 
-  Future<Map<dynamic, dynamic>> searchMovie(
+  Future<SearchMovieResponse> searchMovie(
     String query, {
     bool includeAdult = false,
     String region = 'US',
@@ -18,8 +19,8 @@ class TmdbRepository {
     int primaryReleaseYear,
     String language = 'en-US',
     int page = 1,
-  }) {
-    return _tmdb.v3.search.queryMovies(
+  }) async {
+    return SearchMovieResponse.fromJson(await _tmdb.v3.search.queryMovies(
       query,
       includeAdult: includeAdult,
       region: region,
@@ -27,7 +28,7 @@ class TmdbRepository {
       primaryReleaseYear: primaryReleaseYear,
       language: language,
       page: page,
-    );
+    ));
   }
 
   Future<SearchMovie> searchMovie2(

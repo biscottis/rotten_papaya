@@ -28,13 +28,13 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
       Atom(name: '_MovieListingStoreBase._searchMovieFuture');
 
   @override
-  ObservableFuture<SearchMovie> get _searchMovieFuture {
+  ObservableFuture<SearchMovieResponse> get _searchMovieFuture {
     _$_searchMovieFutureAtom.reportRead();
     return super._searchMovieFuture;
   }
 
   @override
-  set _searchMovieFuture(ObservableFuture<SearchMovie> value) {
+  set _searchMovieFuture(ObservableFuture<SearchMovieResponse> value) {
     _$_searchMovieFutureAtom.reportWrite(value, super._searchMovieFuture, () {
       super._searchMovieFuture = value;
     });
@@ -43,13 +43,13 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
   final _$resultsAtom = Atom(name: '_MovieListingStoreBase.results');
 
   @override
-  ObservableList<SearchMovieResults> get results {
+  ObservableList<SearchMovieInfo> get results {
     _$resultsAtom.reportRead();
     return super.results;
   }
 
   @override
-  set results(ObservableList<SearchMovieResults> value) {
+  set results(ObservableList<SearchMovieInfo> value) {
     _$resultsAtom.reportWrite(value, super.results, () {
       super.results = value;
     });

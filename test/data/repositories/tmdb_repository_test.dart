@@ -12,10 +12,10 @@ void main() {
     final repo = TmdbRepository();
     final resp = await repo.searchMovie('superman');
 
-    expect(resp['results'], isNotEmpty);
-    expect(resp['total_pages'] > 1, isTrue);
-    expect(resp['total_results'] > 1, isTrue);
-    expect(resp['page'] == 1, isTrue);
+    expect(resp.results, isNotEmpty);
+    expect(resp.totalPages > 1, isTrue);
+    expect(resp.totalResults > 1, isTrue);
+    expect(resp.page == 1, isTrue);
   });
 
   test('searchMovie2 should return a list of superman movies', () async {

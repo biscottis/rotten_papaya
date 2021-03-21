@@ -10,7 +10,8 @@ import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
-import 'package:tmdb_easy/easyTMDB.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_response.dart';
 
 import '../../mocks/delegate_file.dart';
 import '../../mocks/mocks.dart';
@@ -46,7 +47,7 @@ void main() {
       ),
     );
 
-    when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenAnswer(
       (_) => Future.value(_mockSearchMovie()),
     );
 
@@ -97,7 +98,7 @@ void main() {
       ),
     );
 
-    when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenAnswer(
       (_) => Future.value(_mockSearchMovie(totalPages: 2, totalResults: 8)),
     );
 
@@ -105,7 +106,7 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
-    when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenAnswer(
       (_) => Future.value(_mockSearchMovie(
           startIndex: 3, page: 2, totalPages: 2, totalResults: 8)),
     );
@@ -128,13 +129,13 @@ void main() {
   });
 }
 
-SearchMovie _mockSearchMovie({
+SearchMovieResponse _mockSearchMovie({
   int startIndex = 0,
   int page = 1,
   int totalPages = 1,
   int totalResults = 4,
 }) {
-  SearchMovieResults mockSingleResult(int index) => SearchMovieResults(
+  SearchMovieInfo mockSingleResult(int index) => SearchMovieInfo(
         adult: false,
         backdropPath: '/zO1nXPpmJylWVHg2eL00HysZqE5.jpg',
         genreIds: [28, 16, 878, 10751],
@@ -151,7 +152,7 @@ SearchMovie _mockSearchMovie({
         voteCount: 379,
       );
 
-  return SearchMovie(
+  return SearchMovieResponse(
     page: page,
     totalPages: totalPages,
     totalResults: totalResults,

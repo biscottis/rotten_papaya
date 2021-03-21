@@ -11,8 +11,8 @@ import 'package:rotten_papaya/app/stores/movie_listing_store.dart';
 import 'package:rotten_papaya/app/theme.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/app/utils/text_utils.dart';
+import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tmdb_easy/model/search/search_movie.dart';
 
 class MovieListingPage extends StatefulWidget {
   const MovieListingPage({Key key}) : super(key: key);
@@ -134,7 +134,7 @@ class MovieCardShimmer extends StatelessWidget {
 }
 
 class MovieGridCell extends StatelessWidget {
-  final SearchMovieResults movieInfo;
+  final SearchMovieInfo movieInfo;
 
   const MovieGridCell({Key key, @required this.movieInfo}) : super(key: key);
 
@@ -142,7 +142,9 @@ class MovieGridCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: () => Get.toNamed('/movieDetail', arguments: {
+          'movieInfo': movieInfo,
+        }),
         child: LayoutBuilder(
           builder: (_, constraints) => Column(
             children: [
@@ -168,8 +170,8 @@ class MovieGridCell extends StatelessWidget {
 }
 
 class MovieImageWithInfo extends StatelessWidget {
-  final SearchMovieResults movieInfo;
   final BaseCacheManager _cacheManager;
+  final SearchMovieInfo movieInfo;
   final BoxConstraints parentConstraints;
 
   MovieImageWithInfo(
@@ -186,7 +188,7 @@ class MovieImageWithInfo extends StatelessWidget {
         children: [
           CachedNetworkImage(
             cacheManager: _cacheManager,
-            imageUrl: _getImageUrl(movieInfo.backdropPath),
+            imageUrl: _getImageUrl(movieInfo.posterPath),
             placeholder: (context, url) => CircularProgressIndicator(),
           ),
           Positioned.fill(
@@ -248,8 +250,8 @@ class MovieImageWithInfo extends StatelessWidget {
     }
   }
 
-  String _getImageUrl(String backdropUrl) {
-    return '${EnvConfig.tmdbApiImageEndpoint}/w500/${pathlib.basename(backdropUrl)}';
+  String _getImageUrl(String posterUrl) {
+    return '${EnvConfig.tmdbApiImageEndpoint}/w500/${pathlib.basename(posterUrl)}';
   }
 }
 
