@@ -16,6 +16,13 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
       (_$isInitialLoadComputed ??= Computed<bool>(() => super.isInitialLoad,
               name: '_MovieListingStoreBase.isInitialLoad'))
           .value;
+  Computed<bool> _$isReachedLastItemComputed;
+
+  @override
+  bool get isReachedLastItem => (_$isReachedLastItemComputed ??= Computed<bool>(
+          () => super.isReachedLastItem,
+          name: '_MovieListingStoreBase.isReachedLastItem'))
+      .value;
 
   final _$_searchMovieFutureAtom =
       Atom(name: '_MovieListingStoreBase._searchMovieFuture');
@@ -110,7 +117,8 @@ results: ${results},
 page: ${page},
 totalResults: ${totalResults},
 totalPages: ${totalPages},
-isInitialLoad: ${isInitialLoad}
+isInitialLoad: ${isInitialLoad},
+isReachedLastItem: ${isReachedLastItem}
     ''';
   }
 }

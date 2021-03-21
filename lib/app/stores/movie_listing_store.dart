@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -34,8 +33,13 @@ abstract class _MovieListingStoreBase with Store {
   @observable
   int totalPages;
 
+  @computed
+  bool get isReachedLastItem => page == totalPages;
+
   String _currentQuery;
   bool _isFirstLoad;
+
+  ScrollController movieGridScrollController;
 
   _MovieListingStoreBase()
       : _tmdbRepo = sl.get<TmdbRepository>(),
@@ -45,7 +49,23 @@ abstract class _MovieListingStoreBase with Store {
         totalResults = 0,
         totalPages = 0,
         _currentQuery = '',
-        _isFirstLoad = false;
+        _isFirstLoad = false,
+        movieGridScrollController = ScrollController();
+
+  void configureMovieGridScrollListener(BuildContext context,
+      {@required String query}) {
+    movieGridScrollController.addListener(() {
+      final currentPosition = movieGridScrollController.position.pixels;
+      final maxPosition = movieGridScrollController.position.maxScrollExtent;
+
+      if (currentPosition >= (maxPosition * 0.85)) {
+        if (!isReachedLastItem &&
+            _searchMovieFuture.status != FutureStatus.pending) {
+          getMovies(context, query: query, pageToQuery: page + 1);
+        }
+      }
+    });
+  }
 
   @action
   Future<void> getMovies(
@@ -60,25 +80,30 @@ abstract class _MovieListingStoreBase with Store {
     }
 
     try {
-      // _searchMovieFuture = Future.delayed(Duration(seconds: 3),
-      //         () => _tmdbRepo.searchMovie2(_currentQuery, page: pageToQuery))
-      //     .asObservable();
-      _searchMovieFuture = _tmdbRepo
-          .searchMovie2(_currentQuery, page: pageToQuery)
+      _searchMovieFuture = Future.delayed(Duration(seconds: 1),
+              () => _tmdbRepo.searchMovie2(_currentQuery, page: pageToQuery))
           .asObservable();
+      // _searchMovieFuture = _tmdbRepo
+      //     .searchMovie2(_currentQuery, page: pageToQuery)
+      //     .asObservable();
       final resp = await _searchMovieFuture;
 
       results.addAll(resp.results);
       page = resp.page;
       totalResults = resp.totalResults;
       totalPages = resp.totalPages;
-    } on SocketException {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
     } on TimeoutException {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(FlutterI18n.translate(context, 'error.timeout'))));
+    } on Exception catch (e) {
+      if (e.toString() == 'Exception: No Internet connection') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
+        return;
+      }
+
+      rethrow;
     }
   }
 }

@@ -20,7 +20,7 @@
 
 	flutter test --coverage --coverage-path=flutter-lcov.info
 
-	remove_from_coverage -f flutter-lcov.info -r ".g.dart$","main.dart"
+	remove_from_coverage -f flutter-lcov.info -r ".g.dart$","main.dart","rotten_papaya_app.dart"
 
 	lcov_cobertura flutter-lcov.info --output flutter-coverage.xml
 

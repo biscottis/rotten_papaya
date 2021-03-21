@@ -4,14 +4,15 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart' as pathlib;
 import 'package:rotten_papaya/app/config/env_config.dart';
+import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/stores/movie_listing_store.dart';
 import 'package:rotten_papaya/app/theme.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/app/utils/text_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tmdb_easy/model/search/search_movie.dart';
-import 'package:path/path.dart' as pathlib;
 
 class MovieListingPage extends StatefulWidget {
   const MovieListingPage({Key key}) : super(key: key);
@@ -32,14 +33,16 @@ class _MovieListingPageState extends State<MovieListingPage> {
   void initState() {
     super.initState();
 
-    store.getMovies(context, query: 'superman', pageToQuery: 1);
+    final query = 'superman';
+    store.configureMovieGridScrollListener(context, query: query);
+    store.getMovies(context, query: query, pageToQuery: 1);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(FlutterI18n.translate(context, 'rotten_papaya')),
+        title: Text(FlutterI18n.translate(context, 'movies')),
         backgroundColor: getColorPrimary(context),
       ),
       body: SafeArea(
@@ -69,15 +72,31 @@ class MovieGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+    return Observer(
+      builder: (_) => GridView.builder(
+        key: WidgetKeys.movieGridKey,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+        ),
+        controller: store.movieGridScrollController,
+        itemCount: store.results.length + 1,
+        itemBuilder: (_, index) {
+          if (index == store.results.length) {
+            return Observer(
+              builder: (_) {
+                if (!store.isReachedLastItem) {
+                  return MovieCardShimmer();
+                }
+
+                return SizedBox.shrink();
+              },
+            );
+          }
+
+          return MovieGridCell(movieInfo: store.results[index]);
+        },
       ),
-      itemCount: store.results.length,
-      itemBuilder: (_, index) {
-        return MovieGridCell(movieInfo: store.results[index]);
-      },
     );
   }
 }
@@ -97,12 +116,19 @@ class MovieGridShimmer extends StatelessWidget {
       ),
       itemCount: 4,
       itemBuilder: (_, __) {
-        return Shimmer.fromColors(
-          child: Card(),
-          baseColor: Colors.grey.shade200,
-          highlightColor: Colors.grey.shade50,
-        );
+        return MovieCardShimmer();
       },
+    );
+  }
+}
+
+class MovieCardShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      child: Card(),
+      baseColor: Colors.grey.shade200,
+      highlightColor: Colors.grey.shade50,
     );
   }
 }
@@ -115,23 +141,26 @@ class MovieGridCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: LayoutBuilder(
-        builder: (_, constraints) => Column(
-          children: [
-            MovieImageWithInfo(
-                movieInfo: movieInfo, parentConstraints: constraints),
-            Flexible(
-              child: Container(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  movieInfo.overview,
-                  style: getTextStyleCaption(context),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+      child: InkWell(
+        onTap: () {},
+        child: LayoutBuilder(
+          builder: (_, constraints) => Column(
+            children: [
+              MovieImageWithInfo(
+                  movieInfo: movieInfo, parentConstraints: constraints),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    movieInfo.overview,
+                    style: getTextStyleCaption(context),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -189,7 +218,7 @@ class MovieImageWithInfo extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  _formatDate(DateTime.parse(movieInfo.releaseDate)),
+                  _formatDate(movieInfo.releaseDate),
                   textAlign: TextAlign.center,
                   style: getTextStyleCaption(
                     context,
@@ -205,9 +234,18 @@ class MovieImageWithInfo extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime dateTime) {
-    return dateFormatMMMyyyy(FlutterI18n.currentLocale(Get.context).toString())
-        .format(dateTime);
+  String _formatDate(String dateTime) {
+    if (dateTime == null || dateTime.isEmpty) {
+      return '-';
+    }
+
+    try {
+      return dateFormatMMMyyyy(
+              FlutterI18n.currentLocale(Get.context).toString())
+          .format(DateTime.parse(dateTime));
+    } catch (_) {
+      return '-';
+    }
   }
 
   String _getImageUrl(String backdropUrl) {

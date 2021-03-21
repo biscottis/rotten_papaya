@@ -4,6 +4,7 @@
         "no_connectivity": "Your network connection might be lost. Please try again later.",
         "timeout": "The service took too long to connect. You might be in an area with low connectivity. Please try again later."
     },
+    "movies": "Movies",
     "ok": "OK",
     "oops": "Oops...",
     "rotten_papaya": "Rotten Papaya",

@@ -6,6 +6,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
@@ -16,7 +17,8 @@ import '../../mocks/mocks.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  testWidgets('Movie listing page displays list of movies',
+  testWidgets(
+      'Should display grid of movies when API returns results for page 1',
       (WidgetTester tester) async {
     _setScreenSize(tester);
 
@@ -45,14 +47,14 @@ void main() {
     );
 
     when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
-      (_) => Future.value(_mockSearchMovie),
+      (_) => Future.value(_mockSearchMovie()),
     );
 
     await tester.pumpWidget(TestApp(home: MovieListingPage()));
-    await tester.pump();
-    await tester.pump();
+    await tester.pump(Duration(seconds: 1));
+    await tester.pump(Duration(seconds: 1));
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'rotten_papaya')),
+    expect(find.text(FlutterI18n.translate(Get.context, 'movies')),
         findsOneWidget);
     expect(find.text('title0'), findsOneWidget);
     expect(find.text('title1'), findsOneWidget);
@@ -66,9 +68,72 @@ void main() {
     expect(find.text('overview2'), findsOneWidget);
     expect(find.text('overview3'), findsOneWidget);
   });
+
+  testWidgets('Should display more results when scrolled to bottom of grid',
+      (WidgetTester tester) async {
+    _setScreenSize(tester);
+
+    final cacheManager = MockCacheManager();
+    final tmdbRepo = MockTmdbRepository();
+    await _registerTestDependencies(
+        cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+
+    when(cacheManager.getFileStream(any,
+            key: anyNamed('key'),
+            headers: anyNamed('headers'),
+            withProgress: anyNamed('withProgress')))
+        .thenAnswer(
+      (_) => Stream.fromIterable(
+        [
+          FileInfo(
+            DelegateFile(
+                originalFile:
+                    File('test/pages//movie_listing/mock_backdrop.jpg')),
+            FileSource.Cache,
+            DateTime.now().add(Duration(days: 1)),
+            'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
+          ),
+        ],
+      ),
+    );
+
+    when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
+      (_) => Future.value(_mockSearchMovie(totalPages: 2, totalResults: 8)),
+    );
+
+    await tester.pumpWidget(TestApp(home: MovieListingPage()));
+    await tester.pump(Duration(seconds: 1));
+    await tester.pump(Duration(seconds: 1));
+
+    when(tmdbRepo.searchMovie2(any, page: anyNamed('page'))).thenAnswer(
+      (_) => Future.value(_mockSearchMovie(
+          startIndex: 3, page: 2, totalPages: 2, totalResults: 8)),
+    );
+
+    // scroll to load more data
+    await tester.drag(find.byKey(WidgetKeys.movieGridKey), Offset(0.0, -800.0));
+    await tester.pump(Duration(seconds: 1));
+
+    // scroll again to bring new grid cells into view
+    await tester.drag(find.byKey(WidgetKeys.movieGridKey), Offset(0.0, -800.0));
+    await tester.pump();
+
+    expect(find.text('title4'), findsOneWidget);
+    expect(find.text('title5'), findsOneWidget);
+    expect(find.text('title6'), findsOneWidget);
+
+    expect(find.text('overview4'), findsOneWidget);
+    expect(find.text('overview5'), findsOneWidget);
+    expect(find.text('overview6'), findsOneWidget);
+  });
 }
 
-SearchMovie get _mockSearchMovie {
+SearchMovie _mockSearchMovie({
+  int startIndex = 0,
+  int page = 1,
+  int totalPages = 1,
+  int totalResults = 4,
+}) {
   SearchMovieResults mockSingleResult(int index) => SearchMovieResults(
         adult: false,
         backdropPath: '/zO1nXPpmJylWVHg2eL00HysZqE5.jpg',
@@ -87,10 +152,10 @@ SearchMovie get _mockSearchMovie {
       );
 
   return SearchMovie(
-    page: 1,
-    totalPages: 1,
-    totalResults: 4,
-    results: List.generate(4, (i) => mockSingleResult(i)),
+    page: page,
+    totalPages: totalPages,
+    totalResults: totalResults,
+    results: List.generate(4, (i) => mockSingleResult(startIndex + i)),
   );
 }
 
