@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rotten_papaya/app/pages/movie_listing/movie_detail_page.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
@@ -96,15 +99,16 @@ abstract class _MovieListingStoreBase with Store {
     } on TimeoutException {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(FlutterI18n.translate(context, 'error.timeout'))));
-    } on Exception catch (e) {
-      if (e.toString() == 'Exception: No Internet connection') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
-        return;
-      }
-
-      rethrow;
+    } on SocketException {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
     }
+  }
+
+  void goToDetailsPage(SearchMovieInfo movieInfo) {
+    Get.toNamed(MovieDetailPage.route, arguments: {
+      'movieInfo': movieInfo,
+    });
   }
 }

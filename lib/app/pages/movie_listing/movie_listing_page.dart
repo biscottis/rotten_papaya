@@ -15,6 +15,8 @@ import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MovieListingPage extends StatefulWidget {
+  static final route = '/';
+
   const MovieListingPage({Key key}) : super(key: key);
 
   @override
@@ -94,7 +96,7 @@ class MovieGrid extends StatelessWidget {
             );
           }
 
-          return MovieGridCell(movieInfo: store.results[index]);
+          return MovieGridCell(store: store, movieInfo: store.results[index]);
         },
       ),
     );
@@ -126,25 +128,25 @@ class MovieCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      child: Card(),
       baseColor: Colors.grey.shade200,
       highlightColor: Colors.grey.shade50,
+      child: Card(),
     );
   }
 }
 
 class MovieGridCell extends StatelessWidget {
+  final MovieListingStore store;
   final SearchMovieInfo movieInfo;
 
-  const MovieGridCell({Key key, @required this.movieInfo}) : super(key: key);
+  const MovieGridCell({Key key, @required this.store, @required this.movieInfo})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => Get.toNamed('/movieDetail', arguments: {
-          'movieInfo': movieInfo,
-        }),
+        onTap: () => store.goToDetailsPage(movieInfo),
         child: LayoutBuilder(
           builder: (_, constraints) => Column(
             children: [
@@ -186,10 +188,13 @@ class MovieImageWithInfo extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CachedNetworkImage(
-            cacheManager: _cacheManager,
-            imageUrl: _getImageUrl(movieInfo.posterPath),
-            placeholder: (context, url) => CircularProgressIndicator(),
+          Hero(
+            tag: movieInfo.id,
+            child: CachedNetworkImage(
+              cacheManager: _cacheManager,
+              imageUrl: _getImageUrl(movieInfo.posterPath),
+              placeholder: (context, url) => CircularProgressIndicator(),
+            ),
           ),
           Positioned.fill(
             child: Container(
@@ -251,6 +256,10 @@ class MovieImageWithInfo extends StatelessWidget {
   }
 
   String _getImageUrl(String posterUrl) {
+    if (posterUrl == null || posterUrl.isEmpty) {
+      return '${EnvConfig.placeholderEndpoint}/500x750.png?text=${FlutterI18n.translate(Get.context, 'no_image_found')}';
+    }
+
     return '${EnvConfig.tmdbApiImageEndpoint}/w500/${pathlib.basename(posterUrl)}';
   }
 }

@@ -42,6 +42,9 @@ void _registerDependencies() {
 }
 
 void _handleUncaughtError(Object error, StackTrace stack) {
+  print(error.toString());
+  print(stack.toString());
+
   var contentText = FlutterI18n.translate(Get.context, 'something_went_wrong');
   if (isDebugMode()) {
     contentText += '\n\nDEBUG: ${error.toString()}';

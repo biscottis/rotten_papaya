@@ -5,8 +5,13 @@
         "timeout": "The service took too long to connect. You might be in an area with low connectivity. Please try again later."
     },
     "movies": "Movies",
+    "no_image_found": "No Image Found",
     "ok": "OK",
     "oops": "Oops...",
+    "overview": "Overview",
+    "ratings": "Ratings",
+    "release_date": "Release Date",
     "rotten_papaya": "Rotten Papaya",
-    "something_went_wrong": "Apologies, something went wrong..."
+    "something_went_wrong": "Apologies, something went wrong...",
+    "title": "Title"
 }

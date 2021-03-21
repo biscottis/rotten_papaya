@@ -153,10 +153,6 @@ Brightness _toBrightness(String brightness) {
 }
 
 AppConfigFontSetting parseFontSettings(String delimitedFontSettings) {
-  if (delimitedFontSettings == null || delimitedFontSettings.isEmpty) {
-    return null;
-  }
-
   final splitSettings = delimitedFontSettings.split('|');
   final expectedLength = 3;
   if (splitSettings.length != expectedLength) {

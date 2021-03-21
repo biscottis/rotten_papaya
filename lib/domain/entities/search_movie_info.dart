@@ -42,8 +42,8 @@ class SearchMovieInfo with EquatableMixin {
     releaseDate = json['release_date'];
     video = json['video'];
     adult = json['adult'];
-    popularity = json['popularity'];
-    voteAverage = json['vote_average'];
+    popularity = json['popularity'].toDouble();
+    voteAverage = json['vote_average'].toDouble();
     voteCount = json['vote_count'];
     id = json['id'];
 

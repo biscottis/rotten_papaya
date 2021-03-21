@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
+import 'package:rotten_papaya/app/rotten_papaya_app.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
@@ -126,6 +127,64 @@ void main() {
     expect(find.text('overview4'), findsOneWidget);
     expect(find.text('overview5'), findsOneWidget);
     expect(find.text('overview6'), findsOneWidget);
+  });
+
+  testWidgets('Should display movie details when tap on movie cell',
+      (WidgetTester tester) async {
+    _setScreenSize(tester);
+
+    final cacheManager = MockCacheManager();
+    final tmdbRepo = MockTmdbRepository();
+    await _registerTestDependencies(
+        cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+
+    when(cacheManager.getFileStream(any,
+            key: anyNamed('key'),
+            headers: anyNamed('headers'),
+            withProgress: anyNamed('withProgress')))
+        .thenAnswer(
+      (_) => Stream.fromIterable(
+        [
+          FileInfo(
+            DelegateFile(
+                originalFile:
+                    File('test/pages//movie_listing/mock_backdrop.jpg')),
+            FileSource.Cache,
+            DateTime.now().add(Duration(days: 1)),
+            'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
+          ),
+        ],
+      ),
+    );
+
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenAnswer(
+      (_) => Future.value(_mockSearchMovie()),
+    );
+
+    await tester
+        .pumpWidget(TestApp(home: MovieListingPage(), pageRoutes: pageRoutes));
+    await tester.pump(Duration(seconds: 1));
+    await tester.pump(Duration(seconds: 1));
+
+    await tester.tap(find.text('title0'));
+    await tester.pump();
+    await tester.pump();
+
+    expect(
+        find.text(FlutterI18n.translate(Get.context, 'title')), findsOneWidget);
+    expect(find.text('title0'), findsWidgets);
+
+    expect(find.text(FlutterI18n.translate(Get.context, 'release_date')),
+        findsOneWidget);
+    expect(find.text('Sep 2007'), findsWidgets);
+
+    expect(find.text(FlutterI18n.translate(Get.context, 'ratings')),
+        findsOneWidget);
+    expect(find.text('6.6'), findsWidgets);
+
+    expect(find.text(FlutterI18n.translate(Get.context, 'overview')),
+        findsOneWidget);
+    expect(find.text('overview0'), findsWidgets);
   });
 }
 
