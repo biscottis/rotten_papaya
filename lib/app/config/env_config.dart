@@ -12,5 +12,5 @@ class EnvConfig {
 
   static const tmdbApiImageEndpoint = String.fromEnvironment(
       'tmdbApiImageEndpoint',
-      defaultValue: 'http://image.tmdb.org/t/p  ');
+      defaultValue: 'https://image.tmdb.org/t/p');
 }

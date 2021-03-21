@@ -3,12 +3,12 @@ import 'package:tmdb_api/tmdb_api.dart';
 import 'package:tmdb_easy/easyTMDB.dart';
 
 class TmdbRepository {
-  final TMDB tmdb;
-  final EasyTMDB easyTmdb;
+  final TMDB _tmdb;
+  final EasyTMDB _easyTmdb;
 
   TmdbRepository()
-      : tmdb = sl.get<TMDB>(),
-        easyTmdb = sl.get<EasyTMDB>();
+      : _tmdb = sl.get<TMDB>(),
+        _easyTmdb = sl.get<EasyTMDB>();
 
   Future<Map<dynamic, dynamic>> searchMovie(
     String query, {
@@ -19,7 +19,7 @@ class TmdbRepository {
     String language = 'en-US',
     int page = 1,
   }) {
-    return tmdb.v3.search.queryMovies(
+    return _tmdb.v3.search.queryMovies(
       query,
       includeAdult: includeAdult,
       region: region,
@@ -39,7 +39,7 @@ class TmdbRepository {
     int primaryReleaseYear,
     int page = 1,
   }) {
-    return easyTmdb.search().movie(
+    return _easyTmdb.search().movie(
           query,
           language: language,
           includeAdult: includeAdult,
