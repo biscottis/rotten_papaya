@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rotten_papaya/app/app_config.dart';
+import 'package:rotten_papaya/app/config/app_config.dart';
 import 'package:rotten_papaya/app/utils/extensions/text_style_extensions.dart';
 
 /// 100% - Max. For example, error texts.
