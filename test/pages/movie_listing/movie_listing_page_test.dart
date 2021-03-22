@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -61,6 +62,39 @@ void main() {
     expect(find.text('overview1'), findsOneWidget);
     expect(find.text('overview2'), findsOneWidget);
     expect(find.text('overview3'), findsOneWidget);
+  });
+
+  testWidgets('Should display no_connectivity error when SocketException is thrown (no internet)',
+      (WidgetTester tester) async {
+    _setScreenSize(tester);
+
+    final cacheManager = MockCacheManager();
+    final tmdbRepo = MockTmdbRepository();
+    await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(SocketException(''));
+
+    await tester.pumpWidget(TestApp(home: MovieListingPage()));
+    await tester.pump(Duration(seconds: 1));
+    await tester.pump(Duration(seconds: 1));
+
+    expect(find.text(FlutterI18n.translate(Get.context, 'error.no_connectivity')), findsOneWidget);
+  });
+
+  testWidgets('Should display timeout error when TimeoutException is thrown', (WidgetTester tester) async {
+    _setScreenSize(tester);
+
+    final cacheManager = MockCacheManager();
+    final tmdbRepo = MockTmdbRepository();
+    await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(TimeoutException(''));
+
+    await tester.pumpWidget(TestApp(home: MovieListingPage()));
+    await tester.pump(Duration(seconds: 1));
+    await tester.pump(Duration(seconds: 1));
+
+    expect(find.text(FlutterI18n.translate(Get.context, 'error.timeout')), findsOneWidget);
   });
 
   testWidgets('Should display more results when scrolled to bottom of grid', (WidgetTester tester) async {

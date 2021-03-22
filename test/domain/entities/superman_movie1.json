@@ -1,0 +1,21 @@
+{
+    "adult": false,
+    "backdrop_path": "/zO1nXPpmJylWVHg2eL00HysZqE5.jpg",
+    "genre_ids": [
+        28,
+        16,
+        878,
+        10751
+    ],
+    "id": 13640,
+    "original_language": "en",
+    "original_title": "Superman: Doomsday",
+    "overview": "When LexCorp accidentally unleashes a murderous creature, Superman meets his greatest challenge as a champion. Based on the \"The Death of Superman\" storyline that appeared in DC Comics' publications in the 1990s.",
+    "popularity": 118.433,
+    "poster_path": "/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg",
+    "release_date": "2007-09-18",
+    "title": "Superman: Doomsday",
+    "video": false,
+    "vote_average": 6.6,
+    "vote_count": 379
+}
