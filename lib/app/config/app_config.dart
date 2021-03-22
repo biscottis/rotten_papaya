@@ -63,56 +63,43 @@ class AppConfig {
     defaultValue: 'Montserrat',
   );
 
-  static const _headline1 =
-      String.fromEnvironment('headline1', defaultValue: '97.0|300|-1.5');
+  static const _headline1 = String.fromEnvironment('headline1', defaultValue: '97.0|300|-1.5');
   static AppConfigFontSetting get headline1 => parseFontSettings(_headline1);
 
-  static const _headline2 =
-      String.fromEnvironment('headline2', defaultValue: '61.0|300|-0.5');
+  static const _headline2 = String.fromEnvironment('headline2', defaultValue: '61.0|300|-0.5');
   static AppConfigFontSetting get headline2 => parseFontSettings(_headline2);
 
-  static const _headline3 =
-      String.fromEnvironment('headline3', defaultValue: '48.0|400|0.0');
+  static const _headline3 = String.fromEnvironment('headline3', defaultValue: '48.0|400|0.0');
   static AppConfigFontSetting get headline3 => parseFontSettings(_headline3);
 
-  static const _headline4 =
-      String.fromEnvironment('headline4', defaultValue: '34.0|400|0.25');
+  static const _headline4 = String.fromEnvironment('headline4', defaultValue: '34.0|400|0.25');
   static AppConfigFontSetting get headline4 => parseFontSettings(_headline4);
 
-  static const _headline5 =
-      String.fromEnvironment('headline5', defaultValue: '24.0|400|0.0');
+  static const _headline5 = String.fromEnvironment('headline5', defaultValue: '24.0|400|0.0');
   static AppConfigFontSetting get headline5 => parseFontSettings(_headline5);
 
-  static const _headline6 =
-      String.fromEnvironment('headline6', defaultValue: '20.0|500|0.15');
+  static const _headline6 = String.fromEnvironment('headline6', defaultValue: '20.0|500|0.15');
   static AppConfigFontSetting get headline6 => parseFontSettings(_headline6);
 
-  static const _subtitle1 =
-      String.fromEnvironment('subtitle1', defaultValue: '16.0|400|0.15');
+  static const _subtitle1 = String.fromEnvironment('subtitle1', defaultValue: '16.0|400|0.15');
   static AppConfigFontSetting get subtitle1 => parseFontSettings(_subtitle1);
 
-  static const _subtitle2 =
-      String.fromEnvironment('subtitle2', defaultValue: '14.0|500|0.1');
+  static const _subtitle2 = String.fromEnvironment('subtitle2', defaultValue: '14.0|500|0.1');
   static AppConfigFontSetting get subtitle2 => parseFontSettings(_subtitle2);
 
-  static const _bodyText1 =
-      String.fromEnvironment('bodyText1', defaultValue: '16.0|400|0.5');
+  static const _bodyText1 = String.fromEnvironment('bodyText1', defaultValue: '16.0|400|0.5');
   static AppConfigFontSetting get bodyText1 => parseFontSettings(_bodyText1);
 
-  static const _bodyText2 =
-      String.fromEnvironment('bodyText2', defaultValue: '14.0|400|0.25');
+  static const _bodyText2 = String.fromEnvironment('bodyText2', defaultValue: '14.0|400|0.25');
   static AppConfigFontSetting get bodyText2 => parseFontSettings(_bodyText2);
 
-  static const _button =
-      String.fromEnvironment('button', defaultValue: '14.0|600|1.25');
+  static const _button = String.fromEnvironment('button', defaultValue: '14.0|600|1.25');
   static AppConfigFontSetting get button => parseFontSettings(_button);
 
-  static const _caption =
-      String.fromEnvironment('caption', defaultValue: '12.0|400|0.4');
+  static const _caption = String.fromEnvironment('caption', defaultValue: '12.0|400|0.4');
   static AppConfigFontSetting get caption => parseFontSettings(_caption);
 
-  static const _overline =
-      String.fromEnvironment('overline', defaultValue: '10.0|400|1.5');
+  static const _overline = String.fromEnvironment('overline', defaultValue: '10.0|400|1.5');
   static AppConfigFontSetting get overline => parseFontSettings(_overline);
 }
 

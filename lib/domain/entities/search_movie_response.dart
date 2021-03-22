@@ -7,17 +7,14 @@ class SearchMovieResponse with EquatableMixin {
   int totalPages;
   List<SearchMovieInfo> results;
 
-  SearchMovieResponse(
-      {this.page, this.totalResults, this.totalPages, this.results});
+  SearchMovieResponse({this.page, this.totalResults, this.totalPages, this.results});
 
   SearchMovieResponse.fromJson(Map<String, dynamic> json) {
     page = json['page'];
     totalResults = json['total_results'];
     totalPages = json['total_pages'];
     results = (json['results'] as List) != null
-        ? (json['results'] as List)
-            .map((i) => SearchMovieInfo.fromJson(i))
-            .toList()
+        ? (json['results'] as List).map((i) => SearchMovieInfo.fromJson(i)).toList()
         : null;
   }
 
@@ -26,8 +23,7 @@ class SearchMovieResponse with EquatableMixin {
     data['page'] = page;
     data['total_results'] = totalResults;
     data['total_pages'] = totalPages;
-    data['results'] =
-        results != null ? results.map((i) => i.toJson()).toList() : null;
+    data['results'] = results != null ? results.map((i) => i.toJson()).toList() : null;
     return data;
   }
 

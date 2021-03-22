@@ -113,8 +113,7 @@ ThemeData get appTheme {
   );
 }
 
-ColorScheme getColorScheme(BuildContext context) =>
-    Theme.of(context).colorScheme;
+ColorScheme getColorScheme(BuildContext context) => Theme.of(context).colorScheme;
 
 TextTheme getTextTheme(BuildContext context) => Theme.of(context).textTheme;
 

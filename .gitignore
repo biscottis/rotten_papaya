@@ -49,3 +49,4 @@ dart-coverage-helper
 flutter-coverage.html
 flutter-coverage.xml
 flutter-lcov.info
+.vscode/settings.json

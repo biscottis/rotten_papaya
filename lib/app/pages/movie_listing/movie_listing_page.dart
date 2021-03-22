@@ -5,6 +5,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as pathlib;
+import 'package:provider/provider.dart';
 import 'package:rotten_papaya/app/config/env_config.dart';
 import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/stores/movie_listing_store.dart';
@@ -24,12 +25,9 @@ class MovieListingPage extends StatefulWidget {
 }
 
 class _MovieListingPageState extends State<MovieListingPage> {
-  final MovieListingStore store;
+  MovieListingStore store;
 
-  _MovieListingPageState()
-      : store = sl.isRegistered<MovieListingStore>()
-            ? sl.get<MovieListingStore>()
-            : MovieListingStore();
+  _MovieListingPageState() : store = MovieListingStore();
 
   @override
   void initState() {
@@ -42,21 +40,24 @@ class _MovieListingPageState extends State<MovieListingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(FlutterI18n.translate(context, 'movies')),
-        backgroundColor: getColorPrimary(context),
-      ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (_, constraints) => Observer(
-            builder: (_) {
-              if (store.isInitialLoad) {
-                return MovieGridShimmer(parentConstraints: constraints);
-              }
+    return Provider.value(
+      value: store,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(FlutterI18n.translate(context, 'movies')),
+          backgroundColor: getColorPrimary(context),
+        ),
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (_, constraints) => Observer(
+              builder: (_) {
+                if (store.isInitialLoad) {
+                  return MovieGridShimmer(parentConstraints: constraints);
+                }
 
-              return MovieGrid(store: store, parentConstraints: constraints);
-            },
+                return MovieGrid(parentConstraints: constraints);
+              },
+            ),
           ),
         ),
       ),
@@ -65,39 +66,38 @@ class _MovieListingPageState extends State<MovieListingPage> {
 }
 
 class MovieGrid extends StatelessWidget {
-  final MovieListingStore store;
   final BoxConstraints parentConstraints;
 
-  const MovieGrid(
-      {Key key, @required this.store, @required this.parentConstraints})
-      : super(key: key);
+  const MovieGrid({Key key, @required this.parentConstraints}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => GridView.builder(
-        key: WidgetKeys.movieGridKey,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+    return Consumer<MovieListingStore>(
+      builder: (_, store, __) => Observer(
+        builder: (_) => GridView.builder(
+          key: WidgetKeys.movieGridKey,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+          ),
+          controller: store.movieGridScrollController,
+          itemCount: store.results.length + 1,
+          itemBuilder: (_, index) {
+            if (index == store.results.length) {
+              return Observer(
+                builder: (_) {
+                  if (!store.isReachedLastItem) {
+                    return MovieCardShimmer();
+                  }
+
+                  return SizedBox.shrink();
+                },
+              );
+            }
+
+            return MovieGridCell(movieInfo: store.results[index]);
+          },
         ),
-        controller: store.movieGridScrollController,
-        itemCount: store.results.length + 1,
-        itemBuilder: (_, index) {
-          if (index == store.results.length) {
-            return Observer(
-              builder: (_) {
-                if (!store.isReachedLastItem) {
-                  return MovieCardShimmer();
-                }
-
-                return SizedBox.shrink();
-              },
-            );
-          }
-
-          return MovieGridCell(store: store, movieInfo: store.results[index]);
-        },
       ),
     );
   }
@@ -106,8 +106,7 @@ class MovieGrid extends StatelessWidget {
 class MovieGridShimmer extends StatelessWidget {
   final BoxConstraints parentConstraints;
 
-  const MovieGridShimmer({Key key, @required this.parentConstraints})
-      : super(key: key);
+  const MovieGridShimmer({Key key, @required this.parentConstraints}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -136,34 +135,33 @@ class MovieCardShimmer extends StatelessWidget {
 }
 
 class MovieGridCell extends StatelessWidget {
-  final MovieListingStore store;
   final SearchMovieInfo movieInfo;
 
-  const MovieGridCell({Key key, @required this.store, @required this.movieInfo})
-      : super(key: key);
+  const MovieGridCell({Key key, @required this.movieInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: () => store.goToDetailsPage(movieInfo),
-        child: LayoutBuilder(
-          builder: (_, constraints) => Column(
-            children: [
-              MovieImageWithInfo(
-                  movieInfo: movieInfo, parentConstraints: constraints),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    movieInfo.overview,
-                    style: getTextStyleCaption(context),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
+    return Consumer<MovieListingStore>(
+      builder: (_, store, __) => Card(
+        child: InkWell(
+          onTap: () => store.goToDetailsPage(movieInfo),
+          child: LayoutBuilder(
+            builder: (_, constraints) => Column(
+              children: [
+                MovieImageWithInfo(movieInfo: movieInfo, parentConstraints: constraints),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      movieInfo.overview,
+                      style: getTextStyleCaption(context),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -176,8 +174,7 @@ class MovieImageWithInfo extends StatelessWidget {
   final SearchMovieInfo movieInfo;
   final BoxConstraints parentConstraints;
 
-  MovieImageWithInfo(
-      {@required this.movieInfo, @required this.parentConstraints})
+  MovieImageWithInfo({@required this.movieInfo, @required this.parentConstraints})
       : _cacheManager = sl.get<BaseCacheManager>();
 
   @override
@@ -247,9 +244,7 @@ class MovieImageWithInfo extends StatelessWidget {
     }
 
     try {
-      return dateFormatMMMyyyy(
-              FlutterI18n.currentLocale(Get.context).toString())
-          .format(DateTime.parse(dateTime));
+      return dateFormatMMMyyyy(FlutterI18n.currentLocale(Get.context).toString()).format(DateTime.parse(dateTime));
     } catch (_) {
       return '-';
     }

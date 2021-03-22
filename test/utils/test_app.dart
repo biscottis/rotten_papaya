@@ -11,8 +11,7 @@ class TestApp extends StatelessWidget {
   final Widget home;
   final List<GetPage> pageRoutes;
 
-  const TestApp({Key key, @required this.home, this.pageRoutes})
-      : super(key: key);
+  const TestApp({Key key, @required this.home, this.pageRoutes}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

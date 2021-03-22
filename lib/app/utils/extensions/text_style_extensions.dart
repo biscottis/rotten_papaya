@@ -12,12 +12,9 @@ extension TextStyleExtension on TextStyle {
       return this;
     }
 
-    final newFontWeightFamily =
-        GoogleFonts.getFont(getFontFamily(), fontWeight: overrideFontWeight)
-            .fontFamily;
+    final newFontWeightFamily = GoogleFonts.getFont(getFontFamily(), fontWeight: overrideFontWeight).fontFamily;
 
-    return copyWith(
-        fontFamily: newFontWeightFamily, fontWeight: overrideFontWeight);
+    return copyWith(fontFamily: newFontWeightFamily, fontWeight: overrideFontWeight);
   }
 
   TextStyle applyColor(Color color) {

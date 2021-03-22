@@ -22,8 +22,7 @@ abstract class _MovieListingStoreBase with Store {
   ObservableFuture<SearchMovieResponse> _searchMovieFuture;
 
   @computed
-  bool get isInitialLoad =>
-      (_searchMovieFuture.status == FutureStatus.pending && _isFirstLoad);
+  bool get isInitialLoad => (_searchMovieFuture.status == FutureStatus.pending && _isFirstLoad);
 
   @observable
   ObservableList<SearchMovieInfo> results;
@@ -56,15 +55,13 @@ abstract class _MovieListingStoreBase with Store {
         _isFirstLoad = false,
         movieGridScrollController = ScrollController();
 
-  void configureMovieGridScrollListener(BuildContext context,
-      {@required String query}) {
+  void configureMovieGridScrollListener(BuildContext context, {@required String query}) {
     movieGridScrollController.addListener(() {
       final currentPosition = movieGridScrollController.position.pixels;
       final maxPosition = movieGridScrollController.position.maxScrollExtent;
 
       if (currentPosition >= (maxPosition * 0.85)) {
-        if (!isReachedLastItem &&
-            _searchMovieFuture.status != FutureStatus.pending) {
+        if (!isReachedLastItem && _searchMovieFuture.status != FutureStatus.pending) {
           getMovies(context, query: query, pageToQuery: page + 1);
         }
       }
@@ -84,9 +81,9 @@ abstract class _MovieListingStoreBase with Store {
     }
 
     try {
-      _searchMovieFuture = Future.delayed(Duration(seconds: 1),
-              () => _tmdbRepo.searchMovie(_currentQuery, page: pageToQuery))
-          .asObservable();
+      _searchMovieFuture =
+          Future.delayed(Duration(seconds: 1), () => _tmdbRepo.searchMovie(_currentQuery, page: pageToQuery))
+              .asObservable();
       // _searchMovieFuture = _tmdbRepo
       //     .searchMovie(_currentQuery, page: pageToQuery)
       //     .asObservable();
@@ -97,12 +94,11 @@ abstract class _MovieListingStoreBase with Store {
       totalResults = resp.totalResults;
       totalPages = resp.totalPages;
     } on TimeoutException {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(FlutterI18n.translate(context, 'error.timeout'))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.timeout'))));
     } on SocketException {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
     }
   }
 

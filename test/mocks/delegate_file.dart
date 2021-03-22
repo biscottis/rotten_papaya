@@ -203,39 +203,30 @@ class DelegateFile implements File {
   Uri get uri => originalFile.uri;
 
   @override
-  Stream<FileSystemEvent> watch(
-      {int events = FileSystemEvent.all, bool recursive = false}) {
+  Stream<FileSystemEvent> watch({int events = FileSystemEvent.all, bool recursive = false}) {
     return originalFile.watch(events: events, recursive: recursive);
   }
 
   @override
-  Future<File> writeAsBytes(List<int> bytes,
-      {FileMode mode = FileMode.write, bool flush = false}) {
+  Future<File> writeAsBytes(List<int> bytes, {FileMode mode = FileMode.write, bool flush = false}) {
     return originalFile.writeAsBytes(bytes, mode: mode, flush: flush);
   }
 
   @override
-  void writeAsBytesSync(List<int> bytes,
-      {FileMode mode = FileMode.write, bool flush = false}) {
+  void writeAsBytesSync(List<int> bytes, {FileMode mode = FileMode.write, bool flush = false}) {
     return originalFile.writeAsBytesSync(bytes, mode: mode, flush: flush);
   }
 
   @override
   Future<File> writeAsString(String contents,
-      {FileMode mode = FileMode.write,
-      Encoding encoding = utf8,
-      bool flush = false}) {
-    return originalFile.writeAsString(contents,
-        mode: mode, encoding: encoding, flush: flush);
+      {FileMode mode = FileMode.write, Encoding encoding = utf8, bool flush = false}) {
+    return originalFile.writeAsString(contents, mode: mode, encoding: encoding, flush: flush);
   }
 
   @override
   void writeAsStringSync(String contents,
-      {FileMode mode = FileMode.write,
-      Encoding encoding = utf8,
-      bool flush = false}) {
-    return originalFile.writeAsStringSync(contents,
-        mode: mode, encoding: encoding, flush: flush);
+      {FileMode mode = FileMode.write, Encoding encoding = utf8, bool flush = false}) {
+    return originalFile.writeAsStringSync(contents, mode: mode, encoding: encoding, flush: flush);
   }
 
   @override

@@ -19,27 +19,20 @@ import '../../mocks/mocks.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  testWidgets(
-      'Should display grid of movies when API returns results for page 1',
-      (WidgetTester tester) async {
+  testWidgets('Should display grid of movies when API returns results for page 1', (WidgetTester tester) async {
     _setScreenSize(tester);
 
     final cacheManager = MockCacheManager();
     final tmdbRepo = MockTmdbRepository();
-    await _registerTestDependencies(
-        cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+    await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
     when(cacheManager.getFileStream(any,
-            key: anyNamed('key'),
-            headers: anyNamed('headers'),
-            withProgress: anyNamed('withProgress')))
+            key: anyNamed('key'), headers: anyNamed('headers'), withProgress: anyNamed('withProgress')))
         .thenAnswer(
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(
-                originalFile:
-                    File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
@@ -56,8 +49,7 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'movies')),
-        findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context, 'movies')), findsOneWidget);
     expect(find.text('title0'), findsOneWidget);
     expect(find.text('title1'), findsOneWidget);
     expect(find.text('title2'), findsOneWidget);
@@ -71,26 +63,20 @@ void main() {
     expect(find.text('overview3'), findsOneWidget);
   });
 
-  testWidgets('Should display more results when scrolled to bottom of grid',
-      (WidgetTester tester) async {
+  testWidgets('Should display more results when scrolled to bottom of grid', (WidgetTester tester) async {
     _setScreenSize(tester);
 
     final cacheManager = MockCacheManager();
     final tmdbRepo = MockTmdbRepository();
-    await _registerTestDependencies(
-        cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+    await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
     when(cacheManager.getFileStream(any,
-            key: anyNamed('key'),
-            headers: anyNamed('headers'),
-            withProgress: anyNamed('withProgress')))
+            key: anyNamed('key'), headers: anyNamed('headers'), withProgress: anyNamed('withProgress')))
         .thenAnswer(
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(
-                originalFile:
-                    File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
@@ -108,8 +94,7 @@ void main() {
     await tester.pump(Duration(seconds: 1));
 
     when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenAnswer(
-      (_) => Future.value(_mockSearchMovie(
-          startIndex: 3, page: 2, totalPages: 2, totalResults: 8)),
+      (_) => Future.value(_mockSearchMovie(startIndex: 3, page: 2, totalPages: 2, totalResults: 8)),
     );
 
     // scroll to load more data
@@ -129,26 +114,20 @@ void main() {
     expect(find.text('overview6'), findsOneWidget);
   });
 
-  testWidgets('Should display movie details when tap on movie cell',
-      (WidgetTester tester) async {
+  testWidgets('Should display movie details when tap on movie cell', (WidgetTester tester) async {
     _setScreenSize(tester);
 
     final cacheManager = MockCacheManager();
     final tmdbRepo = MockTmdbRepository();
-    await _registerTestDependencies(
-        cacheManager: cacheManager, tmdbRepo: tmdbRepo);
+    await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
     when(cacheManager.getFileStream(any,
-            key: anyNamed('key'),
-            headers: anyNamed('headers'),
-            withProgress: anyNamed('withProgress')))
+            key: anyNamed('key'), headers: anyNamed('headers'), withProgress: anyNamed('withProgress')))
         .thenAnswer(
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(
-                originalFile:
-                    File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
@@ -161,8 +140,7 @@ void main() {
       (_) => Future.value(_mockSearchMovie()),
     );
 
-    await tester
-        .pumpWidget(TestApp(home: MovieListingPage(), pageRoutes: pageRoutes));
+    await tester.pumpWidget(TestApp(home: MovieListingPage(), pageRoutes: pageRoutes));
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
@@ -170,20 +148,16 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(
-        find.text(FlutterI18n.translate(Get.context, 'title')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context, 'title')), findsOneWidget);
     expect(find.text('title0'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'release_date')),
-        findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context, 'release_date')), findsOneWidget);
     expect(find.text('Sep 2007'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'ratings')),
-        findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context, 'ratings')), findsOneWidget);
     expect(find.text('6.6'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'overview')),
-        findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context, 'overview')), findsOneWidget);
     expect(find.text('overview0'), findsWidgets);
   });
 }
@@ -230,8 +204,6 @@ Future<void> _registerTestDependencies({
 }) async {
   await sl.reset();
 
-  sl.registerLazySingleton<BaseCacheManager>(
-      () => cacheManager ?? MockCacheManager());
-  sl.registerLazySingleton<TmdbRepository>(
-      () => tmdbRepo ?? MockTmdbRepository());
+  sl.registerLazySingleton<BaseCacheManager>(() => cacheManager ?? MockCacheManager());
+  sl.registerLazySingleton<TmdbRepository>(() => tmdbRepo ?? MockTmdbRepository());
 }

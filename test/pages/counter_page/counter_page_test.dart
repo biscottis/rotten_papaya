@@ -14,8 +14,7 @@ import '../../utils/test_app.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(
-        TestApp(home: CounterPage(title: 'Flutter Demo Home Page')));
+    await tester.pumpWidget(TestApp(home: CounterPage(title: 'Flutter Demo Home Page')));
     await tester.pumpAndSettle();
 
     // Verify that our counter starts at 0.

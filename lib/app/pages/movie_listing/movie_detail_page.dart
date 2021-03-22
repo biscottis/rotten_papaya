@@ -59,8 +59,7 @@ class MovieImage extends StatelessWidget {
   final BoxConstraints parentConstraints;
   final SearchMovieInfo movieInfo;
 
-  MovieImage(
-      {Key key, @required this.parentConstraints, @required this.movieInfo})
+  MovieImage({Key key, @required this.parentConstraints, @required this.movieInfo})
       : _cacheManager = sl.get<BaseCacheManager>(),
         super(key: key);
 
@@ -103,15 +102,10 @@ class MovieDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        MovieLabelAndValue(label: FlutterI18n.translate(context, 'title'), value: movieInfo.title),
         MovieLabelAndValue(
-            label: FlutterI18n.translate(context, 'title'),
-            value: movieInfo.title),
-        MovieLabelAndValue(
-            label: FlutterI18n.translate(context, 'release_date'),
-            value: _formatDate(movieInfo.releaseDate)),
-        MovieLabelAndValue(
-            label: FlutterI18n.translate(context, 'ratings'),
-            value: movieInfo.voteAverage.toString()),
+            label: FlutterI18n.translate(context, 'release_date'), value: _formatDate(movieInfo.releaseDate)),
+        MovieLabelAndValue(label: FlutterI18n.translate(context, 'ratings'), value: movieInfo.voteAverage.toString()),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -138,9 +132,7 @@ class MovieDetails extends StatelessWidget {
     }
 
     try {
-      return dateFormatddMMMyyyy(
-              FlutterI18n.currentLocale(Get.context).toString())
-          .format(DateTime.parse(dateTime));
+      return dateFormatddMMMyyyy(FlutterI18n.currentLocale(Get.context).toString()).format(DateTime.parse(dateTime));
     } catch (_) {
       return '-';
     }
@@ -151,9 +143,7 @@ class MovieLabelAndValue extends StatelessWidget {
   final String label;
   final String value;
 
-  const MovieLabelAndValue(
-      {Key key, @required this.label, @required this.value})
-      : super(key: key);
+  const MovieLabelAndValue({Key key, @required this.label, @required this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
