@@ -15,4 +15,7 @@ class EnvConfig {
 
   static const placeholderEndpoint =
       String.fromEnvironment('placeholderEndpoint', defaultValue: 'https://via.placeholder.com');
+
+  static const tmdbApiEndpoint =
+      String.fromEnvironment('tmdbApiEndpoint', defaultValue: 'https://api.themoviedb.org/3');
 }

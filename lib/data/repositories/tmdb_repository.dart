@@ -1,53 +1,33 @@
+import 'package:dio/dio.dart';
+import 'package:rotten_papaya/app/config/env_config.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_response.dart';
-import 'package:tmdb_api/tmdb_api.dart';
-import 'package:tmdb_easy/easyTMDB.dart';
 
 class TmdbRepository {
-  final TMDB _tmdb;
-  final EasyTMDB _easyTmdb;
+  final Dio _dio;
 
-  TmdbRepository()
-      : _tmdb = sl.get<TMDB>(),
-        _easyTmdb = sl.get<EasyTMDB>();
+  TmdbRepository() : _dio = sl.get<Dio>();
 
   Future<SearchMovieResponse> searchMovie(
     String query, {
-    bool includeAdult = false,
-    String region = 'US',
-    int year,
-    int primaryReleaseYear,
-    String language = 'en-US',
     int page = 1,
-  }) async {
-    return SearchMovieResponse.fromJson(await _tmdb.v3.search.queryMovies(
-      query,
-      includeAdult: includeAdult,
-      region: region,
-      year: year,
-      primaryReleaseYear: primaryReleaseYear,
-      language: language,
-      page: page,
-    ));
-  }
-
-  Future<SearchMovie> searchMovie2(
-    String query, {
-    String language,
-    bool includeAdult,
+    bool includeAdult = false,
+    String language = 'en-US',
     String region,
     int year,
     int primaryReleaseYear,
-    int page = 1,
-  }) {
-    return _easyTmdb.search().movie(
-          query,
-          language: language,
-          includeAdult: includeAdult,
-          region: region,
-          year: year,
-          primaryReleaseYear: primaryReleaseYear,
-          page: page,
-        );
+  }) async {
+    final resp = await _dio.get('${EnvConfig.tmdbApiEndpoint}/search/movie', queryParameters: {
+      'api_key': EnvConfig.tmdbApiKeyV3,
+      'query': query,
+      'page': page,
+      'include_adult': includeAdult,
+      'language': language,
+      if (region != null) 'region': region,
+      if (year != null) 'year': year,
+      if (primaryReleaseYear != null) 'primary_release_year': primaryReleaseYear,
+    });
+
+    return SearchMovieResponse.fromJson(resp.data);
   }
 }

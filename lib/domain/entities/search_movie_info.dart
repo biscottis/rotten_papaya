@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 
-class SearchMovieInfo with EquatableMixin {
-  String posterPath;
-  String backdropPath;
-  String originalLanguage;
-  String originalTitle;
-  String title;
-  String overview;
-  String releaseDate;
-  bool video;
-  bool adult;
-  double popularity;
-  double voteAverage;
-  int voteCount;
-  int id;
-  List<int> genreIds;
+class SearchMovieInfo extends Equatable {
+  final String posterPath;
+  final String backdropPath;
+  final String originalLanguage;
+  final String originalTitle;
+  final String title;
+  final String overview;
+  final String releaseDate;
+  final bool video;
+  final bool adult;
+  final double popularity;
+  final double voteAverage;
+  final int voteCount;
+  final int id;
+  final List<int> genreIds;
 
   SearchMovieInfo(
       {this.posterPath,
@@ -32,26 +32,29 @@ class SearchMovieInfo with EquatableMixin {
       this.id,
       this.genreIds});
 
-  SearchMovieInfo.fromJson(Map<String, dynamic> json) {
-    posterPath = json['poster_path'];
-    backdropPath = json['backdrop_path'];
-    originalLanguage = json['original_language'];
-    originalTitle = json['original_title'];
-    title = json['title'];
-    overview = json['overview'];
-    releaseDate = json['release_date'];
-    video = json['video'];
-    adult = json['adult'];
-    popularity = json['popularity'].toDouble();
-    voteAverage = json['vote_average'].toDouble();
-    voteCount = json['vote_count'];
-    id = json['id'];
-
+  factory SearchMovieInfo.fromJson(Map<String, dynamic> json) {
     List<dynamic> genreIdsList = json['genre_ids'];
-    genreIds = [];
+    final genreIds = <int>[];
     if (genreIdsList != null) {
       genreIds.addAll(genreIdsList.map((o) => int.tryParse(o.toString())));
     }
+
+    return SearchMovieInfo(
+      posterPath: json['poster_path'],
+      backdropPath: json['backdrop_path'],
+      originalLanguage: json['original_language'],
+      originalTitle: json['original_title'],
+      title: json['title'],
+      overview: json['overview'],
+      releaseDate: json['release_date'],
+      video: json['video'],
+      adult: json['adult'],
+      popularity: json['popularity'].toDouble(),
+      voteAverage: json['vote_average'].toDouble(),
+      voteCount: json['vote_count'],
+      id: json['id'],
+      genreIds: genreIds,
+    );
   }
 
   Map<String, dynamic> toJson() {
