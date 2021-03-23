@@ -28,13 +28,13 @@ abstract class _MovieListingStoreBase with Store {
   ObservableList<SearchMovieInfo> results;
 
   @observable
-  int page;
+  int? page;
 
   @observable
-  int totalResults;
+  int? totalResults;
 
   @observable
-  int totalPages;
+  int? totalPages;
 
   @computed
   bool get isReachedLastItem => page == totalPages;
@@ -55,14 +55,14 @@ abstract class _MovieListingStoreBase with Store {
         _isFirstLoad = false,
         movieGridScrollController = ScrollController();
 
-  void configureMovieGridScrollListener(BuildContext context, {@required String query}) {
+  void configureMovieGridScrollListener(BuildContext context, {required String query}) {
     movieGridScrollController.addListener(() {
       final currentPosition = movieGridScrollController.position.pixels;
       final maxPosition = movieGridScrollController.position.maxScrollExtent;
 
       if (currentPosition >= (maxPosition * 0.85)) {
         if (!isReachedLastItem && _searchMovieFuture.status != FutureStatus.pending) {
-          getMovies(context, query: query, pageToQuery: page + 1);
+          getMovies(context, query: query, pageToQuery: page! + 1);
         }
       }
     });
@@ -71,8 +71,8 @@ abstract class _MovieListingStoreBase with Store {
   @action
   Future<void> getMovies(
     BuildContext context, {
-    @required String query,
-    @required int pageToQuery,
+    required String query,
+    required int pageToQuery,
   }) async {
     _isFirstLoad = _currentQuery != query || pageToQuery == 1;
     if (_isFirstLoad) {
@@ -89,7 +89,7 @@ abstract class _MovieListingStoreBase with Store {
       //     .asObservable();
       final resp = await _searchMovieFuture;
 
-      results.addAll(resp.results);
+      results.addAll(resp.results!);
       page = resp.page;
       totalResults = resp.totalResults;
       totalPages = resp.totalPages;

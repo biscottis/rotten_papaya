@@ -14,7 +14,7 @@ void main() {
     expect(searchMovieResp.page, equals(1));
     expect(searchMovieResp.totalPages, equals(8));
     expect(searchMovieResp.totalResults, equals(154));
-    expect(searchMovieResp.results.length, equals(20));
+    expect(searchMovieResp.results!.length, equals(20));
   });
 
   test('Should return json map when SearchMovieResponse.toJson is used', () {

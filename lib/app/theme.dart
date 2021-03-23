@@ -254,11 +254,11 @@ Color getColorOnError(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleHeadline1(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline1
+        .headline1!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -270,11 +270,11 @@ TextStyle getTextStyleHeadline1(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleHeadline2(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline2
+        .headline2!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -286,11 +286,11 @@ TextStyle getTextStyleHeadline2(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleHeadline3(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline3
+        .headline3!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -302,11 +302,11 @@ TextStyle getTextStyleHeadline3(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation
 TextStyle getTextStyleHeadline4(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline4
+        .headline4!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -318,11 +318,11 @@ TextStyle getTextStyleHeadline4(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleHeadline5(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline5
+        .headline5!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -336,11 +336,11 @@ TextStyle getTextStyleHeadline5(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleHeadline6(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .headline6
+        .headline6!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -352,11 +352,11 @@ TextStyle getTextStyleHeadline6(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleSubtitle1(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .subtitle1
+        .subtitle1!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -368,11 +368,11 @@ TextStyle getTextStyleSubtitle1(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleSubtitle2(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .subtitle2
+        .subtitle2!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -384,11 +384,11 @@ TextStyle getTextStyleSubtitle2(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleBodyText1(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .bodyText1
+        .bodyText1!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -400,11 +400,11 @@ TextStyle getTextStyleBodyText1(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleBodyText2(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .bodyText2
+        .bodyText2!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -417,11 +417,11 @@ TextStyle getTextStyleBodyText2(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleCaption(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .caption
+        .caption!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -435,11 +435,11 @@ TextStyle getTextStyleCaption(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleOverline(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .overline
+        .overline!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));
 
@@ -453,10 +453,10 @@ TextStyle getTextStyleOverline(
 /// [https://material.io/design/color/the-color-system.html#color-theme-creation]
 TextStyle getTextStyleButton(
   BuildContext context, {
-  Color color,
-  FontWeight overrideFontWeight,
+  Color? color,
+  FontWeight? overrideFontWeight,
 }) =>
     getTextTheme(context)
-        .button
+        .button!
         .applyGoogleFontWeight(overrideFontWeight)
         .applyColor(color ?? getColorOnBackground(context));

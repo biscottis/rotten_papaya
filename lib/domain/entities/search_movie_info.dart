@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 
 class SearchMovieInfo extends Equatable {
-  final String posterPath;
-  final String backdropPath;
-  final String originalLanguage;
-  final String originalTitle;
-  final String title;
-  final String overview;
-  final String releaseDate;
-  final bool video;
-  final bool adult;
-  final double popularity;
-  final double voteAverage;
-  final int voteCount;
-  final int id;
-  final List<int> genreIds;
+  final String? posterPath;
+  final String? backdropPath;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? title;
+  final String? overview;
+  final String? releaseDate;
+  final bool? video;
+  final bool? adult;
+  final double? popularity;
+  final double? voteAverage;
+  final int? voteCount;
+  final int? id;
+  final List<int?>? genreIds;
 
   SearchMovieInfo(
       {this.posterPath,
@@ -33,12 +33,6 @@ class SearchMovieInfo extends Equatable {
       this.genreIds});
 
   factory SearchMovieInfo.fromJson(Map<String, dynamic> json) {
-    List<dynamic> genreIdsList = json['genre_ids'];
-    final genreIds = <int>[];
-    if (genreIdsList != null) {
-      genreIds.addAll(genreIdsList.map((o) => int.tryParse(o.toString())));
-    }
-
     return SearchMovieInfo(
       posterPath: json['poster_path'],
       backdropPath: json['backdrop_path'],
@@ -53,7 +47,7 @@ class SearchMovieInfo extends Equatable {
       voteAverage: json['vote_average'].toDouble(),
       voteCount: json['vote_count'],
       id: json['id'],
-      genreIds: genreIds,
+      genreIds: json['genre_ids'].cast<int>(),
     );
   }
 
@@ -77,7 +71,7 @@ class SearchMovieInfo extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         posterPath,
         backdropPath,
         originalLanguage,

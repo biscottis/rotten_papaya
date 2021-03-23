@@ -6,6 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rotten_papaya/app/constants/widget_keys.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
@@ -16,14 +17,15 @@ import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_response.dart';
 
 import '../../mocks/delegate_file.dart';
-import '../../mocks/mocks.dart';
 import '../../utils/test_app.dart';
+import 'movie_listing_page_test.mocks.dart';
 
+@GenerateMocks([BaseCacheManager, TmdbRepository])
 void main() {
   testWidgets('Should display grid of movies when API returns results for page 1', (WidgetTester tester) async {
     _setScreenSize(tester);
 
-    final cacheManager = MockCacheManager();
+    final cacheManager = MockBaseCacheManager();
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
@@ -50,7 +52,7 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'movies')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'movies')), findsOneWidget);
     expect(find.text('title0'), findsOneWidget);
     expect(find.text('title1'), findsOneWidget);
     expect(find.text('title2'), findsOneWidget);
@@ -68,7 +70,7 @@ void main() {
       (WidgetTester tester) async {
     _setScreenSize(tester);
 
-    final cacheManager = MockCacheManager();
+    final cacheManager = MockBaseCacheManager();
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
@@ -78,13 +80,13 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'error.no_connectivity')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'error.no_connectivity')), findsOneWidget);
   });
 
   testWidgets('Should display timeout error when TimeoutException is thrown', (WidgetTester tester) async {
     _setScreenSize(tester);
 
-    final cacheManager = MockCacheManager();
+    final cacheManager = MockBaseCacheManager();
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
@@ -94,13 +96,13 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     await tester.pump(Duration(seconds: 1));
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'error.timeout')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'error.timeout')), findsOneWidget);
   });
 
   testWidgets('Should display more results when scrolled to bottom of grid', (WidgetTester tester) async {
     _setScreenSize(tester);
 
-    final cacheManager = MockCacheManager();
+    final cacheManager = MockBaseCacheManager();
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
@@ -151,7 +153,7 @@ void main() {
   testWidgets('Should display movie details when tap on movie cell', (WidgetTester tester) async {
     _setScreenSize(tester);
 
-    final cacheManager = MockCacheManager();
+    final cacheManager = MockBaseCacheManager();
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
@@ -182,16 +184,16 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'title')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'title')), findsOneWidget);
     expect(find.text('title0'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'release_date')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'release_date')), findsOneWidget);
     expect(find.text('Sep 2007'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'ratings')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'ratings')), findsOneWidget);
     expect(find.text('6.6'), findsWidgets);
 
-    expect(find.text(FlutterI18n.translate(Get.context, 'overview')), findsOneWidget);
+    expect(find.text(FlutterI18n.translate(Get.context!, 'overview')), findsOneWidget);
     expect(find.text('overview0'), findsWidgets);
   });
 }
@@ -233,11 +235,11 @@ void _setScreenSize(WidgetTester tester) {
 }
 
 Future<void> _registerTestDependencies({
-  BaseCacheManager cacheManager,
-  TmdbRepository tmdbRepo,
+  BaseCacheManager? cacheManager,
+  TmdbRepository? tmdbRepo,
 }) async {
   await sl.reset();
 
-  sl.registerLazySingleton<BaseCacheManager>(() => cacheManager ?? MockCacheManager());
+  sl.registerLazySingleton<BaseCacheManager>(() => cacheManager ?? MockBaseCacheManager());
   sl.registerLazySingleton<TmdbRepository>(() => tmdbRepo ?? MockTmdbRepository());
 }

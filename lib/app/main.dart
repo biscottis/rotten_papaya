@@ -37,20 +37,20 @@ void _handleUncaughtError(Object error, StackTrace stack) {
   print(error.toString());
   print(stack.toString());
 
-  var contentText = FlutterI18n.translate(Get.context, 'something_went_wrong');
+  var contentText = FlutterI18n.translate(Get.context!, 'something_went_wrong');
   if (isDebugMode()) {
     contentText += '\n\nDEBUG: ${error.toString()}';
   }
 
   Get.dialog(
     AlertDialog(
-      title: Text(FlutterI18n.translate(Get.context, 'oops')),
+      title: Text(FlutterI18n.translate(Get.context!, 'oops')),
       content: Text(contentText),
       actions: [
         TextButton(
           onPressed: () => Get.back(),
           child: Text(
-            FlutterI18n.translate(Get.context, 'ok'),
+            FlutterI18n.translate(Get.context!, 'ok'),
           ),
         )
       ],

@@ -13,9 +13,9 @@ class TmdbRepository {
     int page = 1,
     bool includeAdult = false,
     String language = 'en-US',
-    String region,
-    int year,
-    int primaryReleaseYear,
+    String? region,
+    int? year,
+    int? primaryReleaseYear,
   }) async {
     final resp = await _dio.get('${EnvConfig.tmdbApiEndpoint}/search/movie', queryParameters: {
       'api_key': EnvConfig.tmdbApiKeyV3,

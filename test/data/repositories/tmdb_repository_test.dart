@@ -11,8 +11,8 @@ void main() {
     final resp = await repo.searchMovie('superman');
 
     expect(resp.results, isNotEmpty);
-    expect(resp.totalPages > 1, isTrue);
-    expect(resp.totalResults > 1, isTrue);
+    expect(resp.totalPages! > 1, isTrue);
+    expect(resp.totalResults! > 1, isTrue);
     expect(resp.page == 1, isTrue);
   });
 }

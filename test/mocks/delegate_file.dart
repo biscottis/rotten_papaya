@@ -7,7 +7,6 @@ import 'package:file/src/interface/directory.dart';
 import 'package:file/src/interface/file.dart';
 import 'package:file/src/interface/file_system.dart';
 import 'package:file/src/interface/file_system_entity.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as pathlib;
 
 /// The flutter_cache_manager does not expose the necessary classes needed for their
@@ -15,24 +14,24 @@ import 'package:path/path.dart' as pathlib;
 class DelegateFile implements File {
   final io.File originalFile;
 
-  const DelegateFile({@required this.originalFile});
+  const DelegateFile({required this.originalFile});
 
   @override
-  File get absolute => originalFile.absolute;
+  File get absolute => originalFile.absolute as File;
 
   @override
   Future<File> copy(String newPath) {
-    return originalFile.copy(newPath);
+    return originalFile.copy(newPath) as Future<File>;
   }
 
   @override
   File copySync(String newPath) {
-    return originalFile.copySync(newPath);
+    return originalFile.copySync(newPath) as File;
   }
 
   @override
   Future<File> create({bool recursive = false}) {
-    return originalFile.create(recursive: recursive);
+    return originalFile.create(recursive: recursive) as Future<File>;
   }
 
   @override
@@ -42,7 +41,7 @@ class DelegateFile implements File {
 
   @override
   Future<FileSystemEntity> delete({bool recursive = false}) {
-    return originalFile.delete(recursive: recursive);
+    return originalFile.delete(recursive: recursive) as Future<FileSystemEntity>;
   }
 
   @override
@@ -99,7 +98,7 @@ class DelegateFile implements File {
   }
 
   @override
-  Stream<List<int>> openRead([int start, int end]) {
+  Stream<List<int>> openRead([int? start, int? end]) {
     return originalFile.openRead(start, end);
   }
 
@@ -114,7 +113,7 @@ class DelegateFile implements File {
   }
 
   @override
-  Directory get parent => originalFile.parent;
+  Directory get parent => originalFile.parent as Directory;
 
   @override
   String get path => originalFile.path;
@@ -151,12 +150,12 @@ class DelegateFile implements File {
 
   @override
   Future<File> rename(String newPath) {
-    return originalFile.rename(newPath);
+    return originalFile.rename(newPath) as Future<File>;
   }
 
   @override
   File renameSync(String newPath) {
-    return originalFile.renameSync(newPath);
+    return originalFile.renameSync(newPath) as File;
   }
 
   @override
@@ -209,7 +208,7 @@ class DelegateFile implements File {
 
   @override
   Future<File> writeAsBytes(List<int> bytes, {FileMode mode = FileMode.write, bool flush = false}) {
-    return originalFile.writeAsBytes(bytes, mode: mode, flush: flush);
+    return originalFile.writeAsBytes(bytes, mode: mode, flush: flush) as Future<File>;
   }
 
   @override
@@ -220,7 +219,7 @@ class DelegateFile implements File {
   @override
   Future<File> writeAsString(String contents,
       {FileMode mode = FileMode.write, Encoding encoding = utf8, bool flush = false}) {
-    return originalFile.writeAsString(contents, mode: mode, encoding: encoding, flush: flush);
+    return originalFile.writeAsString(contents, mode: mode, encoding: encoding, flush: flush) as Future<File>;
   }
 
   @override

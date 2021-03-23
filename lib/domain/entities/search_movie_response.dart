@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
 
 class SearchMovieResponse extends Equatable {
-  final int page;
-  final int totalResults;
-  final int totalPages;
-  final List<SearchMovieInfo> results;
+  final int? page;
+  final int? totalResults;
+  final int? totalPages;
+  final List<SearchMovieInfo>? results;
 
   SearchMovieResponse({this.page, this.totalResults, this.totalPages, this.results});
 
@@ -13,7 +13,7 @@ class SearchMovieResponse extends Equatable {
       : page = json['page'],
         totalResults = json['total_results'],
         totalPages = json['total_pages'],
-        results = (json['results'] as List) != null
+        results = (json['results'] as List?) != null
             ? (json['results'] as List).map((i) => SearchMovieInfo.fromJson(i)).toList()
             : null;
 
@@ -22,10 +22,10 @@ class SearchMovieResponse extends Equatable {
     data['page'] = page;
     data['total_results'] = totalResults;
     data['total_pages'] = totalPages;
-    data['results'] = results != null ? results.map((i) => i.toJson()).toList() : null;
+    data['results'] = results != null ? results!.map((i) => i.toJson()).toList() : null;
     return data;
   }
 
   @override
-  List<Object> get props => [page, totalResults, totalPages, results];
+  List<Object?> get props => [page, totalResults, totalPages, results];
 }

@@ -21,7 +21,7 @@ const _landscapeGridCellCount = 4;
 class MovieListingPage extends StatefulWidget {
   static final route = '/';
 
-  const MovieListingPage({Key key}) : super(key: key);
+  const MovieListingPage({Key? key}) : super(key: key);
 
   @override
   _MovieListingPageState createState() => _MovieListingPageState();
@@ -71,7 +71,7 @@ class _MovieListingPageState extends State<MovieListingPage> {
 class MovieGrid extends StatelessWidget {
   final BoxConstraints parentConstraints;
 
-  const MovieGrid({Key key, @required this.parentConstraints}) : super(key: key);
+  const MovieGrid({Key? key, required this.parentConstraints}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class MovieGrid extends StatelessWidget {
 class MovieGridShimmer extends StatelessWidget {
   final BoxConstraints parentConstraints;
 
-  const MovieGridShimmer({Key key, @required this.parentConstraints}) : super(key: key);
+  const MovieGridShimmer({Key? key, required this.parentConstraints}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +142,7 @@ class MovieCardShimmer extends StatelessWidget {
 class MovieGridCell extends StatelessWidget {
   final SearchMovieInfo movieInfo;
 
-  const MovieGridCell({Key key, @required this.movieInfo}) : super(key: key);
+  const MovieGridCell({Key? key, required this.movieInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +158,7 @@ class MovieGridCell extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
-                      movieInfo.overview,
+                      movieInfo.overview!,
                       style: getTextStyleCaption(context),
                       overflow: TextOverflow.ellipsis,
                       maxLines: Get.mediaQuery.orientation == Orientation.portrait ? 3 : 9,
@@ -179,7 +179,7 @@ class MovieImageWithInfo extends StatelessWidget {
   final SearchMovieInfo movieInfo;
   final BoxConstraints parentConstraints;
 
-  MovieImageWithInfo({@required this.movieInfo, @required this.parentConstraints})
+  MovieImageWithInfo({required this.movieInfo, required this.parentConstraints})
       : _cacheManager = sl.get<BaseCacheManager>();
 
   @override
@@ -191,7 +191,7 @@ class MovieImageWithInfo extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Hero(
-            tag: movieInfo.id,
+            tag: movieInfo.id!,
             child: CachedNetworkImage(
               cacheManager: _cacheManager,
               imageUrl: _getImageUrl(movieInfo.posterPath),
@@ -213,7 +213,7 @@ class MovieImageWithInfo extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      movieInfo.title,
+                      movieInfo.title!,
                       textAlign: TextAlign.start,
                       style: getTextStyleBodyText1(
                         context,
@@ -243,21 +243,21 @@ class MovieImageWithInfo extends StatelessWidget {
     );
   }
 
-  String _formatDate(String dateTime) {
+  String _formatDate(String? dateTime) {
     if (dateTime == null || dateTime.isEmpty) {
       return '-';
     }
 
     try {
-      return dateFormatMMMyyyy(FlutterI18n.currentLocale(Get.context).toString()).format(DateTime.parse(dateTime));
+      return dateFormatMMMyyyy(FlutterI18n.currentLocale(Get.context!).toString()).format(DateTime.parse(dateTime));
     } catch (_) {
       return '-';
     }
   }
 
-  String _getImageUrl(String posterUrl) {
+  String _getImageUrl(String? posterUrl) {
     if (posterUrl == null || posterUrl.isEmpty) {
-      return '${EnvConfig.placeholderEndpoint}/500x750.png?text=${FlutterI18n.translate(Get.context, 'no_image_found')}';
+      return '${EnvConfig.placeholderEndpoint}/500x750.png?text=${FlutterI18n.translate(Get.context!, 'no_image_found')}';
     }
 
     return '${EnvConfig.tmdbApiImageEndpoint}/w500/${pathlib.basename(posterUrl)}';

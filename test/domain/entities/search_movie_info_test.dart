@@ -51,7 +51,7 @@ void main() {
     final jsonObj = searchMovieInfo.toJson();
     expect(jsonObj['adult'], isFalse);
     expect(jsonObj['backdrop_path'], equals('/zO1nXPpmJylWVHg2eL00HysZqE5.jpg'));
-    expect(listEquals(jsonObj['genre_ids'], [28, 16, 878, 10751]), isTrue);
+    expect(listEquals(jsonObj['genre_ids'].cast<int>(), [28, 16, 878, 10751]), isTrue);
     expect(jsonObj['id'], equals(13640));
     expect(jsonObj['original_language'], equals('en'));
     expect(jsonObj['original_title'], equals('Superman: Doomsday'));
