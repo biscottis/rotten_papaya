@@ -77,8 +77,8 @@ class MovieGrid extends StatelessWidget {
         builder: (_) => GridView.builder(
           key: WidgetKeys.movieGridKey,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+            crossAxisCount: Get.mediaQuery.orientation == Orientation.portrait ? 2 : 4,
+            childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints, Get.mediaQuery.orientation),
           ),
           controller: store.movieGridScrollController,
           itemCount: store.results.length + 1,
@@ -113,7 +113,7 @@ class MovieGridShimmer extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints),
+        childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints, Get.mediaQuery.orientation),
       ),
       itemCount: 4,
       itemBuilder: (_, __) {
@@ -156,7 +156,7 @@ class MovieGridCell extends StatelessWidget {
                       movieInfo.overview,
                       style: getTextStyleCaption(context),
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
+                      maxLines: Get.mediaQuery.orientation == Orientation.portrait ? 3 : 9,
                     ),
                   ),
                 ),
@@ -259,9 +259,9 @@ class MovieImageWithInfo extends StatelessWidget {
   }
 }
 
-double _getDesiredGridCellAspectRatio(BoxConstraints constraints) {
+double _getDesiredGridCellAspectRatio(BoxConstraints constraints, Orientation orientation) {
   final itemHeight = constraints.maxHeight / 2;
   final itemWidth = constraints.maxWidth / 2;
 
-  return itemWidth / itemHeight;
+  return orientation == Orientation.portrait ? itemWidth / itemHeight : itemHeight / itemWidth;
 }
