@@ -15,6 +15,9 @@ import 'package:rotten_papaya/app/utils/text_utils.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
 import 'package:shimmer/shimmer.dart';
 
+const _portraitGridCellCount = 2;
+const _landscapeGridCellCount = 4;
+
 class MovieListingPage extends StatefulWidget {
   static final route = '/';
 
@@ -77,7 +80,8 @@ class MovieGrid extends StatelessWidget {
         builder: (_) => GridView.builder(
           key: WidgetKeys.movieGridKey,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: Get.mediaQuery.orientation == Orientation.portrait ? 2 : 4,
+            crossAxisCount:
+                Get.mediaQuery.orientation == Orientation.portrait ? _portraitGridCellCount : _landscapeGridCellCount,
             childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints, Get.mediaQuery.orientation),
           ),
           controller: store.movieGridScrollController,
@@ -112,7 +116,8 @@ class MovieGridShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount:
+            Get.mediaQuery.orientation == Orientation.portrait ? _portraitGridCellCount : _landscapeGridCellCount,
         childAspectRatio: _getDesiredGridCellAspectRatio(parentConstraints, Get.mediaQuery.orientation),
       ),
       itemCount: 4,
@@ -200,7 +205,7 @@ class MovieImageWithInfo extends StatelessWidget {
           ),
           Positioned(
             bottom: 16.0,
-            width: 200.0,
+            width: parentConstraints.maxWidth,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
