@@ -4,10 +4,13 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get/get.dart';
+import 'package:mobx/mobx.dart';
 import 'package:path/path.dart' as pathlib;
 import 'package:provider/provider.dart';
 import 'package:rotten_papaya/app/config/env_config.dart';
 import 'package:rotten_papaya/app/constants/widget_keys.dart';
+import 'package:rotten_papaya/app/navigation.dart';
+import 'package:rotten_papaya/app/pages/movie_listing/movie_detail_page.dart';
 import 'package:rotten_papaya/app/stores/movie_listing_store.dart';
 import 'package:rotten_papaya/app/theme.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
@@ -30,6 +33,8 @@ class MovieListingPage extends StatefulWidget {
 class _MovieListingPageState extends State<MovieListingPage> {
   MovieListingStore store;
 
+  List<ReactionDisposer>? _reactions;
+
   _MovieListingPageState() : store = MovieListingStore();
 
   @override
@@ -37,8 +42,34 @@ class _MovieListingPageState extends State<MovieListingPage> {
     super.initState();
 
     final query = 'superman';
-    store.configureMovieGridScrollListener(context, query: query);
-    store.getMovies(context, query: query, pageToQuery: 1);
+    store.configureMovieGridScrollListener(query: query);
+    store.getMovies(query: query, pageToQuery: 1);
+
+    _reactions ??= [
+      reaction<String>(
+        (_) => store.generalError,
+        (error) {
+          if (error.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, error))));
+          }
+        },
+      ),
+      reaction<RouteState>(
+        (_) => store.routeState,
+        (routeState) async {
+          if (routeState.routeName == MovieDetailPage.route) {
+            await Get.toNamed(MovieDetailPage.route, arguments: routeState.arguments);
+            store.returnFromDetailsPage();
+          }
+        },
+      )
+    ];
+  }
+
+  @override
+  void dispose() {
+    _reactions?.forEach((reaction) => reaction());
+    super.dispose();
   }
 
   @override

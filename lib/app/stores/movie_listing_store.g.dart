@@ -31,11 +31,24 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
               name: '_MovieListingStoreBase.hasResults'))
           .value;
 
+  final _$_routeStateAtom = Atom(name: '_MovieListingStoreBase._routeState');
+
+  RouteState get routeState {
+    _$_routeStateAtom.reportRead();
+    return super._routeState;
+  }
+
+  @override
+  set _routeState(RouteState value) {
+    _$_routeStateAtom.reportWrite(value, super._routeState, () {
+      super._routeState = value;
+    });
+  }
+
   final _$_searchMovieFutureAtom =
       Atom(name: '_MovieListingStoreBase._searchMovieFuture');
 
-  @override
-  ObservableFuture<SearchMovieResponse> get _searchMovieFuture {
+  ObservableFuture<SearchMovieResponse> get searchMovieFuture {
     _$_searchMovieFutureAtom.reportRead();
     return super._searchMovieFuture;
   }
@@ -104,14 +117,28 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
     });
   }
 
+  final _$_generalErrorAtom =
+      Atom(name: '_MovieListingStoreBase._generalError');
+
+  String get generalError {
+    _$_generalErrorAtom.reportRead();
+    return super._generalError;
+  }
+
+  @override
+  set _generalError(String value) {
+    _$_generalErrorAtom.reportWrite(value, super._generalError, () {
+      super._generalError = value;
+    });
+  }
+
   final _$getMoviesAsyncAction =
       AsyncAction('_MovieListingStoreBase.getMovies');
 
   @override
-  Future<void> getMovies(BuildContext context,
-      {required String query, required int pageToQuery}) {
-    return _$getMoviesAsyncAction.run(
-        () => super.getMovies(context, query: query, pageToQuery: pageToQuery));
+  Future<void> getMovies({required String query, required int pageToQuery}) {
+    return _$getMoviesAsyncAction
+        .run(() => super.getMovies(query: query, pageToQuery: pageToQuery));
   }
 
   @override

@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:get/get.dart';
 import 'package:mobx/mobx.dart';
+import 'package:rotten_papaya/app/navigation.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_detail_page.dart';
+import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
 import 'package:rotten_papaya/data/repositories/tmdb_repository.dart';
 import 'package:rotten_papaya/domain/entities/search_movie_info.dart';
@@ -19,6 +19,11 @@ class MovieListingStore = _MovieListingStoreBase with _$MovieListingStore;
 abstract class _MovieListingStoreBase with Store {
   final TmdbRepository _tmdbRepo;
 
+  @readonly
+  @observable
+  RouteState _routeState;
+
+  @readonly
   @observable
   ObservableFuture<SearchMovieResponse> _searchMovieFuture;
 
@@ -45,6 +50,10 @@ abstract class _MovieListingStoreBase with Store {
   @computed
   bool get isReachedLastItem => _page == _totalPages;
 
+  @readonly
+  @observable
+  String _generalError;
+
   String _currentQuery;
   bool _isFirstLoad;
 
@@ -62,27 +71,30 @@ abstract class _MovieListingStoreBase with Store {
         _totalPages = 0,
         _currentQuery = '',
         _isFirstLoad = false,
+        _generalError = '',
+        _routeState = RouteState(routeName: MovieListingPage.route),
         movieGridScrollController = ScrollController();
 
-  void configureMovieGridScrollListener(BuildContext context, {required String query}) {
+  void configureMovieGridScrollListener({required String query}) {
     movieGridScrollController.addListener(() {
       final currentPosition = movieGridScrollController.position.pixels;
       final maxPosition = movieGridScrollController.position.maxScrollExtent;
 
       if (currentPosition >= (maxPosition * 0.85)) {
         if (!isReachedLastItem && _searchMovieFuture.status != FutureStatus.pending) {
-          getMovies(context, query: query, pageToQuery: _page! + 1);
+          getMovies(query: query, pageToQuery: _page! + 1);
         }
       }
     });
   }
 
   @action
-  Future<void> getMovies(
-    BuildContext context, {
+  Future<void> getMovies({
     required String query,
     required int pageToQuery,
   }) async {
+    _clearError();
+
     _isFirstLoad = _currentQuery != query || pageToQuery == 1;
     if (_isFirstLoad) {
       _results.clear();
@@ -93,9 +105,6 @@ abstract class _MovieListingStoreBase with Store {
       _searchMovieFuture =
           Future.delayed(Duration(seconds: 1), () => _tmdbRepo.searchMovie(_currentQuery, page: pageToQuery))
               .asObservable();
-      // _searchMovieFuture = _tmdbRepo
-      //     .searchMovie(_currentQuery, page: pageToQuery)
-      //     .asObservable();
       final resp = await _searchMovieFuture;
 
       _results.addAll(resp.results!);
@@ -104,18 +113,22 @@ abstract class _MovieListingStoreBase with Store {
       _totalPages = resp.totalPages;
     } on DioError catch (e) {
       if ([DioErrorType.connectTimeout, DioErrorType.receiveTimeout, DioErrorType.sendTimeout].contains(e.type)) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.timeout'))));
+        _generalError = 'error.timeout';
       } else if (DioErrorType.other == e.type && e.error is SocketException) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
+        _generalError = 'error.no_connectivity';
       }
     }
   }
 
   void goToDetailsPage(SearchMovieInfo movieInfo) {
-    Get.toNamed(MovieDetailPage.route, arguments: {
-      'movieInfo': movieInfo,
-    });
+    _routeState = RouteState(routeName: MovieDetailPage.route, arguments: {'movieInfo': movieInfo});
+  }
+
+  void returnFromDetailsPage() {
+    _routeState = RouteState(routeName: MovieListingPage.route);
+  }
+
+  void _clearError() {
+    _generalError = '';
   }
 }
