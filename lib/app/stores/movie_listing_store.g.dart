@@ -23,6 +23,13 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
           () => super.isReachedLastItem,
           name: '_MovieListingStoreBase.isReachedLastItem'))
       .value;
+  Computed<bool>? _$hasResultsComputed;
+
+  @override
+  bool get hasResults =>
+      (_$hasResultsComputed ??= Computed<bool>(() => super.hasResults,
+              name: '_MovieListingStoreBase.hasResults'))
+          .value;
 
   final _$_searchMovieFutureAtom =
       Atom(name: '_MovieListingStoreBase._searchMovieFuture');
@@ -40,63 +47,60 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
     });
   }
 
-  final _$resultsAtom = Atom(name: '_MovieListingStoreBase.results');
+  final _$_resultsAtom = Atom(name: '_MovieListingStoreBase._results');
 
-  @override
   ObservableList<SearchMovieInfo> get results {
-    _$resultsAtom.reportRead();
-    return super.results;
+    _$_resultsAtom.reportRead();
+    return super._results;
   }
 
   @override
-  set results(ObservableList<SearchMovieInfo> value) {
-    _$resultsAtom.reportWrite(value, super.results, () {
-      super.results = value;
+  set _results(ObservableList<SearchMovieInfo> value) {
+    _$_resultsAtom.reportWrite(value, super._results, () {
+      super._results = value;
     });
   }
 
-  final _$pageAtom = Atom(name: '_MovieListingStoreBase.page');
+  final _$_pageAtom = Atom(name: '_MovieListingStoreBase._page');
 
-  @override
   int? get page {
-    _$pageAtom.reportRead();
-    return super.page;
+    _$_pageAtom.reportRead();
+    return super._page;
   }
 
   @override
-  set page(int? value) {
-    _$pageAtom.reportWrite(value, super.page, () {
-      super.page = value;
+  set _page(int? value) {
+    _$_pageAtom.reportWrite(value, super._page, () {
+      super._page = value;
     });
   }
 
-  final _$totalResultsAtom = Atom(name: '_MovieListingStoreBase.totalResults');
+  final _$_totalResultsAtom =
+      Atom(name: '_MovieListingStoreBase._totalResults');
 
-  @override
   int? get totalResults {
-    _$totalResultsAtom.reportRead();
-    return super.totalResults;
+    _$_totalResultsAtom.reportRead();
+    return super._totalResults;
   }
 
   @override
-  set totalResults(int? value) {
-    _$totalResultsAtom.reportWrite(value, super.totalResults, () {
-      super.totalResults = value;
+  set _totalResults(int? value) {
+    _$_totalResultsAtom.reportWrite(value, super._totalResults, () {
+      super._totalResults = value;
     });
   }
 
-  final _$totalPagesAtom = Atom(name: '_MovieListingStoreBase.totalPages');
+  final _$_totalPagesAtom = Atom(name: '_MovieListingStoreBase._totalPages');
 
-  @override
   int? get totalPages {
-    _$totalPagesAtom.reportRead();
-    return super.totalPages;
+    _$_totalPagesAtom.reportRead();
+    return super._totalPages;
   }
 
   @override
-  set totalPages(int? value) {
-    _$totalPagesAtom.reportWrite(value, super.totalPages, () {
-      super.totalPages = value;
+  set _totalPages(int? value) {
+    _$_totalPagesAtom.reportWrite(value, super._totalPages, () {
+      super._totalPages = value;
     });
   }
 
@@ -113,12 +117,9 @@ mixin _$MovieListingStore on _MovieListingStoreBase, Store {
   @override
   String toString() {
     return '''
-results: ${results},
-page: ${page},
-totalResults: ${totalResults},
-totalPages: ${totalPages},
 isInitialLoad: ${isInitialLoad},
-isReachedLastItem: ${isReachedLastItem}
+isReachedLastItem: ${isReachedLastItem},
+hasResults: ${hasResults}
     ''';
   }
 }

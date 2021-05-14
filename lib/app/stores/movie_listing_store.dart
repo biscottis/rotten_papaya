@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
@@ -24,33 +25,41 @@ abstract class _MovieListingStoreBase with Store {
   @computed
   bool get isInitialLoad => (_searchMovieFuture.status == FutureStatus.pending && _isFirstLoad);
 
+  @readonly
   @observable
-  ObservableList<SearchMovieInfo> results;
+  // ignore: prefer_final_fields
+  ObservableList<SearchMovieInfo> _results;
 
+  @readonly
   @observable
-  int? page;
+  int? _page;
 
+  @readonly
   @observable
-  int? totalResults;
+  int? _totalResults;
 
+  @readonly
   @observable
-  int? totalPages;
+  int? _totalPages;
 
   @computed
-  bool get isReachedLastItem => page == totalPages;
+  bool get isReachedLastItem => _page == _totalPages;
 
   String _currentQuery;
   bool _isFirstLoad;
 
   ScrollController movieGridScrollController;
 
+  @computed
+  bool get hasResults => !isInitialLoad && _results.isNotEmpty;
+
   _MovieListingStoreBase()
       : _tmdbRepo = sl.get<TmdbRepository>(),
         _searchMovieFuture = Future.value(SearchMovieResponse()).asObservable(),
-        results = <SearchMovieInfo>[].asObservable(),
-        page = 0,
-        totalResults = 0,
-        totalPages = 0,
+        _results = <SearchMovieInfo>[].asObservable(),
+        _page = 0,
+        _totalResults = 0,
+        _totalPages = 0,
         _currentQuery = '',
         _isFirstLoad = false,
         movieGridScrollController = ScrollController();
@@ -62,7 +71,7 @@ abstract class _MovieListingStoreBase with Store {
 
       if (currentPosition >= (maxPosition * 0.85)) {
         if (!isReachedLastItem && _searchMovieFuture.status != FutureStatus.pending) {
-          getMovies(context, query: query, pageToQuery: page! + 1);
+          getMovies(context, query: query, pageToQuery: _page! + 1);
         }
       }
     });
@@ -76,7 +85,7 @@ abstract class _MovieListingStoreBase with Store {
   }) async {
     _isFirstLoad = _currentQuery != query || pageToQuery == 1;
     if (_isFirstLoad) {
-      results.clear();
+      _results.clear();
       _currentQuery = query;
     }
 
@@ -89,16 +98,18 @@ abstract class _MovieListingStoreBase with Store {
       //     .asObservable();
       final resp = await _searchMovieFuture;
 
-      results.addAll(resp.results!);
-      page = resp.page;
-      totalResults = resp.totalResults;
-      totalPages = resp.totalPages;
-    } on TimeoutException {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.timeout'))));
-    } on SocketException {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
+      _results.addAll(resp.results!);
+      _page = resp.page;
+      _totalResults = resp.totalResults;
+      _totalPages = resp.totalPages;
+    } on DioError catch (e) {
+      if ([DioErrorType.connectTimeout, DioErrorType.receiveTimeout, DioErrorType.sendTimeout].contains(e.type)) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.timeout'))));
+      } else if (DioErrorType.other == e.type && e.error is SocketException) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(FlutterI18n.translate(context, 'error.no_connectivity'))));
+      }
     }
   }
 

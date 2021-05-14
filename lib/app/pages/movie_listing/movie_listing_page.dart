@@ -58,6 +58,10 @@ class _MovieListingPageState extends State<MovieListingPage> {
                   return MovieGridShimmer(parentConstraints: constraints);
                 }
 
+                if (!store.hasResults) {
+                  return Center(child: Text(FlutterI18n.translate(context, 'no_results_found')));
+                }
+
                 return MovieGrid(parentConstraints: constraints);
               },
             ),
