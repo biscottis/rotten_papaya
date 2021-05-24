@@ -5,9 +5,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as pathlib;
+import 'package:rotten_papaya/app/blocs/movie_listing_bloc.dart';
 import 'package:rotten_papaya/app/config/env_config.dart';
 import 'package:rotten_papaya/app/constants/widget_keys.dart';
-import 'package:rotten_papaya/app/cubits/movie_listing_cubit.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_detail_page.dart';
 import 'package:rotten_papaya/app/theme.dart';
 import 'package:rotten_papaya/app/utils/service_locator.dart';
@@ -18,21 +18,21 @@ import 'package:shimmer/shimmer.dart';
 const _portraitGridCellCount = 2;
 const _landscapeGridCellCount = 4;
 
-class MovieListingCubitPage extends StatefulWidget {
-  static final route = '/cubit';
+class MovieListingBlocPage extends StatefulWidget {
+  static final route = '/bloc';
 
-  const MovieListingCubitPage({Key? key}) : super(key: key);
+  const MovieListingBlocPage({Key? key}) : super(key: key);
 
   @override
-  _MovieListingCubitPageState createState() => _MovieListingCubitPageState();
+  _MovieListingBlocPageState createState() => _MovieListingBlocPageState();
 }
 
-class _MovieListingCubitPageState extends State<MovieListingCubitPage> {
-  final MovieListingCubit cubit;
+class _MovieListingBlocPageState extends State<MovieListingBlocPage> {
+  final MovieListingBloc bloc;
   final ScrollController movieGridScrollController;
 
-  _MovieListingCubitPageState()
-      : cubit = MovieListingCubit(),
+  _MovieListingBlocPageState()
+      : bloc = MovieListingBloc(),
         movieGridScrollController = ScrollController();
 
   @override
@@ -40,7 +40,7 @@ class _MovieListingCubitPageState extends State<MovieListingCubitPage> {
     super.initState();
 
     configureMovieGridScrollListener();
-    cubit.getMovies(query: 'superman', pageToQuery: 1);
+    bloc.add(MovieListingGetMovies(query: 'superman', pageToQuery: 1));
   }
 
   void configureMovieGridScrollListener() {
@@ -49,8 +49,8 @@ class _MovieListingCubitPageState extends State<MovieListingCubitPage> {
       final maxPosition = movieGridScrollController.position.maxScrollExtent;
 
       if (currentPosition >= (maxPosition * 0.85)) {
-        if (!cubit.state.isReachedLastPage && cubit.state is! MovieListingLoading) {
-          cubit.getMovies(query: cubit.state.query, pageToQuery: cubit.state.page + 1);
+        if (!bloc.state.isReachedLastPage && bloc.state is! MovieListingLoading) {
+          bloc.add(MovieListingGetMovies(query: bloc.state.query, pageToQuery: bloc.state.page + 1));
         }
       }
     });
@@ -59,12 +59,12 @@ class _MovieListingCubitPageState extends State<MovieListingCubitPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: cubit,
-      child: BlocConsumer<MovieListingCubit, MovieListingState>(
+      value: bloc,
+      child: BlocConsumer<MovieListingBloc, MovieListingState>(
         listener: (context, state) async {
           if (state is MovieDetailRedirect) {
             await Get.toNamed(MovieDetailPage.route, arguments: {'movieInfo': state.movieInfo});
-            cubit.returnFromDetailsPage();
+            bloc.add(MovieListingReturnFromDetails());
           }
         },
         builder: (context, state) {
@@ -107,7 +107,7 @@ class MovieGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieListingCubit, MovieListingState>(
+    return BlocBuilder<MovieListingBloc, MovieListingState>(
       builder: (context, state) {
         return GridView.builder(
           key: WidgetKeys.movieGridKey,
@@ -174,13 +174,13 @@ class MovieGridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieListingCubit, MovieListingState>(
+    return BlocBuilder<MovieListingBloc, MovieListingState>(
       builder: (context, state) {
-        final cubit = BlocProvider.of<MovieListingCubit>(context);
+        final bloc = BlocProvider.of<MovieListingBloc>(context);
 
         return Card(
           child: InkWell(
-            onTap: () => cubit.goToDetailsPage(movieInfo),
+            onTap: () => bloc.add(MovieListingGoToDetails(movieInfo: movieInfo)),
             child: LayoutBuilder(
               builder: (_, constraints) => Column(
                 children: [

@@ -22,7 +22,7 @@ const _portraitGridCellCount = 2;
 const _landscapeGridCellCount = 4;
 
 class MovieListingPage extends StatefulWidget {
-  static final route = '/';
+  static final route = '/mobx';
 
   const MovieListingPage({Key? key}) : super(key: key);
 

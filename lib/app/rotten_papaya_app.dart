@@ -6,7 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/route_manager.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_detail_page.dart';
+import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_bloc_page.dart';
 import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_cubit_page.dart';
+import 'package:rotten_papaya/app/pages/movie_listing/movie_listing_page.dart';
 import 'package:rotten_papaya/app/theme.dart';
 
 class RottenPapayaApp extends StatelessWidget {
@@ -28,7 +30,7 @@ class RottenPapayaApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      initialRoute: MovieListingCubitPage.route,
+      initialRoute: MovieListingBlocPage.route,
       getPages: pageRoutes,
     );
   }
@@ -36,8 +38,16 @@ class RottenPapayaApp extends StatelessWidget {
 
 final List<GetPage> pageRoutes = [
   GetPage(
+    name: MovieListingPage.route,
+    page: () => MovieListingPage(),
+  ),
+  GetPage(
     name: MovieListingCubitPage.route,
     page: () => MovieListingCubitPage(),
+  ),
+  GetPage(
+    name: MovieListingBlocPage.route,
+    page: () => MovieListingBlocPage(),
   ),
   GetPage(
     name: MovieDetailPage.route,
