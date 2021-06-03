@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io' as io;
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +37,7 @@ void main() {
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: io.File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
@@ -74,7 +76,11 @@ void main() {
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
-    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(SocketException(''));
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(DioError(
+      requestOptions: RequestOptions(path: ''),
+      type: DioErrorType.other,
+      error: SocketException(''),
+    ));
 
     await tester.pumpWidget(TestApp(home: MovieListingPage()));
     await tester.pump(Duration(seconds: 1));
@@ -90,7 +96,11 @@ void main() {
     final tmdbRepo = MockTmdbRepository();
     await _registerTestDependencies(cacheManager: cacheManager, tmdbRepo: tmdbRepo);
 
-    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(TimeoutException(''));
+    when(tmdbRepo.searchMovie(any, page: anyNamed('page'))).thenThrow(DioError(
+      requestOptions: RequestOptions(path: ''),
+      type: DioErrorType.sendTimeout,
+      error: TimeoutException(''),
+    ));
 
     await tester.pumpWidget(TestApp(home: MovieListingPage()));
     await tester.pump(Duration(seconds: 1));
@@ -112,7 +122,7 @@ void main() {
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: io.File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',
@@ -163,7 +173,7 @@ void main() {
       (_) => Stream.fromIterable(
         [
           FileInfo(
-            DelegateFile(originalFile: File('test/pages//movie_listing/mock_backdrop.jpg')),
+            DelegateFile(originalFile: io.File('test/pages//movie_listing/mock_backdrop.jpg')),
             FileSource.Cache,
             DateTime.now().add(Duration(days: 1)),
             'https://image.tmdb.org/t/p/w500/itvuWm7DFWWzWgW0xgiaKzzWszP.jpg',

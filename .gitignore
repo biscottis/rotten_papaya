@@ -44,9 +44,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-.vscode/launch.json
 dart-coverage-helper
 flutter-coverage.html
 flutter-coverage.xml
 flutter-lcov.info
 .vscode/settings.json
+.DS_Store

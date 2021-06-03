@@ -25,9 +25,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   void initState() {
-    movieInfo = widget.movieInfo ?? Get.arguments['movieInfo'];
-
     super.initState();
+
+    movieInfo = widget.movieInfo ?? Get.arguments['movieInfo'];
   }
 
   @override

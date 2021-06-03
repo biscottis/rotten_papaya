@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/app/main.dart"
+        },
+        {
+            "name": "profile",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/app/main.dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "debug_custom",
+            "program": "lib/app/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "--dart-define=primaryColor=0xFFF44336",
+                "--dart-define=primaryVariantColor=0xFFD32F2F",
+                "--dart-define=secondaryColor=0xFFFFC107",
+                "--dart-define=secondaryVariantColor=0xFFFFCDD2",
+                "--dart-define=fontFamily=Libre Baskerville"
+            ]
+        },
+        {
+            "name": "All Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "test/"
+        }
+    ]
+}
